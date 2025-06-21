@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "427260981643",
+    "project_id": "songquest-463608",
+    "storage_bucket": "songquest-463608.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:427260981643:android:dfe554c2626f0db55d3f8e",
+        "android_client_info": {
+          "package_name": "com.example.songquest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG7bzDvwtD9svnLCR2GsiyBF3eU36L4ic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
