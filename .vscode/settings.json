@@ -1,0 +1,8 @@
+{
+  "dart.flutterSdkPath": ".fvm/versions/3.32.4",
+  "dart.customEmulators": {
+    "flutter": {
+      "path": "fvm"
+    }
+  }
+}
