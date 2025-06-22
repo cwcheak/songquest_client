@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:songquest/screens/auth/login_screen.dart';
+import 'package:songquest/screens/auth/register_screen.dart';
+import 'package:songquest/screens/auth/forgot_password_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
 import 'package:songquest/screens/settings/settings_screen.dart';
-import 'package:songquest/repo/settings_repo.dart';
 import 'package:songquest/screens/home/home_page.dart';
 import 'package:songquest/screens/scaffold_home_page.dart';
-import 'package:songquest/screens/login/login_screen.dart';
-import 'package:songquest/screens/account_creation/account_creation_screen.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:songquest/repo/settings_repo.dart';
 
 class Routes {
   /// The base path of the app
@@ -69,11 +70,23 @@ class Routes {
               transitionResolver(const LoginScreen()),
         ),
         GoRoute(
-          path: '/create-account',
-          name: 'CreateAccount',
+          path: '/register',
+          name: 'Register',
           pageBuilder: (context, state) =>
-              transitionResolver(const AccountCreationScreen()),
+              transitionResolver(const RegisterScreen()),
         ),
+        GoRoute(
+          path: '/forgot-password',
+          name: 'Forgot Password',
+          pageBuilder: (context, state) =>
+              transitionResolver(const ForgotPasswordScreen()),
+        ),
+        // GoRoute(
+        //   path: '/create-account',
+        //   name: 'CreateAccount',
+        //   pageBuilder: (context, state) =>
+        //       transitionResolver(const AccountCreationScreen()),
+        // ),
         StatefulShellRoute.indexedStack(
           builder: (context, state, shell) =>
               ScaffoldHomePage(navigationShell: shell),
@@ -104,6 +117,8 @@ class Routes {
           ],
         ),
       ],
+      errorBuilder: (context, state) =>
+          Scaffold(body: Center(child: Text('Page not found: ${state.error}'))),
     );
   }
 }

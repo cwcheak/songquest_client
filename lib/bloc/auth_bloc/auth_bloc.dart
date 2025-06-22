@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart';
 import 'package:songquest/repo/authentication_repo.dart';
@@ -26,6 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // on<AuthSignInWithGoogleRequested>(_onSignInWithGoogleRequested);
     // on<AuthSignInWithFacebookRequested>(_onSignInWithFacebookRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
+    on<AuthSendPasswordResetEmailRequested>(_onSendPasswordResetEmailRequested);
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
@@ -107,6 +108,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await _authenticationRepository.signOut();
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Sign out failed'));
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onSendPasswordResetEmailRequested(
+    AuthSendPasswordResetEmailRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    try {
+      await _authenticationRepository.sendPasswordResetEmail(
+        email: event.email,
+      );
+      emit(const AuthPasswordResetEmailSent());
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      emit(AuthFailure(e.message ?? 'Password reset failed'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }

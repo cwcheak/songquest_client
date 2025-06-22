@@ -39,6 +39,7 @@ void main() async {
     Logger.instance.d(details.stack);
   };
 
+  // Open and load database, if need to perform version migration
   final db = await databaseFactory.openDatabase(
     'system.db',
     options: OpenDatabaseOptions(

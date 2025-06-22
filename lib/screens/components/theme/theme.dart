@@ -46,10 +46,15 @@ class AppTheme extends ChangeNotifier {
   static ThemeData createLightThemeData() {
     return FlexThemeData.light(
       scheme: usedScheme,
+      // Blending in primary color into surface, background, scaffoldBackground and dialogBackground colors
+      surfaceMode: FlexSurfaceMode.level,
+      // Blend level strength used by the used surfaceMode
+      blendLevel: 7,
       // Use very subtly themed app bar elevation in light mode.
       appBarElevation: 0.5,
       // Opt in/out of using Material 3.
       useMaterial3: useMaterial3,
+      swapLegacyOnMaterial3: true,
       // We use the nicer Material 3 Typography in both M2 and M3 mode.
       typography: Typography.material2021(platform: defaultTargetPlatform),
     );
@@ -58,10 +63,15 @@ class AppTheme extends ChangeNotifier {
   static ThemeData createDarkThemeData() {
     return FlexThemeData.dark(
       scheme: usedScheme,
+      // Blending in primary color into surface, background, scaffoldBackground and dialogBackground colors
+      surfaceMode: FlexSurfaceMode.level,
+      // Blend level strength used by the used surfaceMode
+      blendLevel: 7,
       // Use a bit more themed elevated app bar in dark mode.
       appBarElevation: 2,
       // Opt in/out of using Material 3.
       useMaterial3: useMaterial3,
+      swapLegacyOnMaterial3: true,
       // We use the nicer Material 3 Typography in both M2 and M3 mode.
       typography: Typography.material2021(platform: defaultTargetPlatform),
     );

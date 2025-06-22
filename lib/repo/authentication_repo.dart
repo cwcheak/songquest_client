@@ -32,10 +32,19 @@ class AuthenticationRepository {
     required String password,
   }) async {
     try {
-      return await _firebaseAuth.createUserWithEmailAndPassword(
+      // Create user account
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Send email verification
+      await userCredential.user?.sendEmailVerification();
+
+      // Sign out user to prevent automatic login before verification
+      await _firebaseAuth.signOut();
+
+      return userCredential;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw firebase_auth.FirebaseAuthException(
         code: e.code,
@@ -87,6 +96,17 @@ class AuthenticationRepository {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw firebase_auth.FirebaseAuthException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
+
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw firebase_auth.FirebaseAuthException(
         code: e.code,

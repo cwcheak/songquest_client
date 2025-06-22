@@ -1,15 +1,15 @@
-// lib/login_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginScreen1 extends StatefulWidget {
-  const LoginScreen1({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginScreen1> createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen1> {
+class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   bool _isPasswordVisible = false;
@@ -43,24 +43,17 @@ class _LoginScreenState extends State<LoginScreen1> {
               children: [
                 const SizedBox(height: 50),
                 // Logo
-                Image.asset(
-                  'assets/logo.png',
-                  height: 180,
-                  // Ensure you have your logo in the assets folder
-                ),
+                Image.asset('assets/logo.png', height: 180),
                 const SizedBox(height: 40),
 
                 // Email Field
-                Text(
-                  'Enter your email',
-                  style: textTheme.bodyLarge,
-                ),
+                Text('Enter your email', style: textTheme.bodyLarge),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
-                    hintText: 'user@example.com',
+                    hintText: 'sample@email.com',
                     // The checkmark icon indicates validation.
                     // This can be made dynamic based on email validation logic.
                     suffixIcon: Icon(
@@ -72,10 +65,7 @@ class _LoginScreenState extends State<LoginScreen1> {
                 const SizedBox(height: 20),
 
                 // Password Field
-                Text(
-                  'Enter your password',
-                  style: textTheme.bodyLarge,
-                ),
+                Text('Enter your password', style: textTheme.bodyLarge),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _passwordController,
@@ -104,9 +94,9 @@ class _LoginScreenState extends State<LoginScreen1> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Handle forgot password
+                      context.push('/forgot-password');
                     },
-                    child: const Text('forgot password?'),
+                    child: const Text('Forgot password?'),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -168,8 +158,6 @@ class _LoginScreenState extends State<LoginScreen1> {
                 const SizedBox(height: 50),
 
                 // Sign Up Link
-                // Note: The original image text was "Already have an account? Sign In",
-                // which is unusual for a login screen. Changed to a more logical "Sign Up" prompt.
                 Center(
                   child: RichText(
                     text: TextSpan(
@@ -184,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen1> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              // TODO: Navigate to Sign Up Screen
+                              context.go('/register');
                             },
                         ),
                       ],
@@ -208,11 +196,7 @@ class _LoginScreenState extends State<LoginScreen1> {
         padding: const EdgeInsets.all(16),
         side: BorderSide(color: Colors.grey.shade300),
       ),
-      child: Image.asset(
-        assetPath,
-        height: 24,
-        width: 24,
-      ),
+      child: Image.asset(assetPath, height: 24, width: 24),
     );
   }
 }

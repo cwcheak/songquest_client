@@ -27,3 +27,7 @@ class AuthFailure extends AuthState {
   final String message;
   const AuthFailure(this.message);
 }
+
+class AuthPasswordResetEmailSent extends AuthState {
+  const AuthPasswordResetEmailSent();
+}
