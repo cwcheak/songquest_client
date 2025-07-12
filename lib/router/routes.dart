@@ -48,8 +48,15 @@ class Routes {
         final authState = context.read<AuthBloc>().state;
         final isAuthenticated = authState is AuthAuthenticated;
         final isLoginRoute = state.uri.path == '/login';
+        final isRegisterRoute = state.uri.path == '/register';
+        final isForgotPasswordRoute = state.uri.path == '/forgot-password';
 
-        // Redirect to login if not authenticated and not already on login route
+        // Allow access to register or forgot password routes for unauthenticated users
+        if (!isAuthenticated && (isRegisterRoute || isForgotPasswordRoute)) {
+          return null;
+        }
+
+        // Redirect to login if not authenticated and not on login or register route
         if (!isAuthenticated && !isLoginRoute) {
           return '/login';
         }

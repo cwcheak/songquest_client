@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="-20 -20 140 140" xmlns="http://www.w3.org/2000/svg" style="background-color:transparent;">
+  <!--
+    SongQuest 声启 Logo Icon
+    Stylized representation of the Chinese character 声 (shēng - sound).
+  -->
+  <g id="icon">
+    <path d="M49.6,12.8c11.2,0,21.6,4,29.6,12.8 M49.6,0C33.6,0,19.2,6.4,9.6,18.4 M49.6,25.6 c5.6,0,11.2,1.6,16,4.8" fill="none" stroke="#FF6B00" stroke-width="8" stroke-linecap="round" stroke-miterlimit="10"/>
+    <path d="M0,40h100 M0,55h100 M0,70h100 M50,40v60 M0,100h100" fill="none" stroke="#FF6B00" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"/>
+  </g>
+</svg>

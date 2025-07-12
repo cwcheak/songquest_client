@@ -1,0 +1,24 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" style="background-color:#F7F7F7;">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&amp;family=Noto+Sans+SC:wght@500&amp;display=swap');
+    </style>
+  </defs>
+  <g transform="translate(0, -30)">
+    <!-- Guitar Pick / Speech Bubble Icon -->
+    <g id="icon" transform="translate(400, 240) scale(1.6)">
+      <path d="M0,-80 C 60,-80 80,-20 80,0 C 80,20 60,80 0,80 C -60,80 -80,20 -80,0 C -80,-20 -60,-80 0,-80 Z" fill="#FF8C00"/>
+      <path d="M-40, -15 Q -45,0 -30,10 L 0,30 L 30,10 Q 45,0 40,-15 Q 0,-30 -40,-15 Z" fill="#FFFFFF"/>
+      <circle cx="0" cy="45" r="12" fill="#FFFFFF"/>
+      <text x="0" y="52" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#FF8C00" text-anchor="middle">$</text>
+    </g>
+    <!-- Text: "SongQuest" -->
+    <text x="400" y="440" font-family="'Poppins', sans-serif" font-size="72" font-weight="700" fill="#1C1C1E" text-anchor="middle">
+      SongQuest
+    </text>
+    <!-- Text: "声启" -->
+    <text x="400" y="520" font-family="'Noto Sans SC', sans-serif" font-size="48" font-weight="500" fill="#333333" text-anchor="middle">
+      声启
+    </text>
+  </g>
+</svg>

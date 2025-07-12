@@ -105,6 +105,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
+                        backgroundColor: colorScheme.primary,
+                        foregroundColor: colorScheme.onPrimary,
                       ),
                       onPressed: isLoading
                           ? null

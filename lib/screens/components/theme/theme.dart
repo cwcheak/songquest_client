@@ -57,6 +57,21 @@ class AppTheme extends ChangeNotifier {
       swapLegacyOnMaterial3: true,
       // We use the nicer Material 3 Typography in both M2 and M3 mode.
       typography: Typography.material2021(platform: defaultTargetPlatform),
+    ).copyWith(
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+      ),
     );
   }
 
@@ -74,6 +89,21 @@ class AppTheme extends ChangeNotifier {
       swapLegacyOnMaterial3: true,
       // We use the nicer Material 3 Typography in both M2 and M3 mode.
       typography: Typography.material2021(platform: defaultTargetPlatform),
+    ).copyWith(
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.blue),
+        ),
+      ),
     );
   }
 

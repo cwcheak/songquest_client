@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart';
+import 'package:songquest/helper/logger.dart';
 import 'package:songquest/repo/authentication_repo.dart';
 
 part 'auth_event.dart';
@@ -41,12 +42,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignInWithEmailRequested event,
     Emitter<AuthState> emit,
   ) async {
+    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
+    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
+
     emit(const AuthLoading());
     try {
+      Logger.instance.d("Start _onSignInWithEmailRequested....");
       await _authenticationRepository.signInWithEmailAndPassword(
         email: event.email,
         password: event.password,
       );
+      Logger.instance.d("Completed _onSignInWithEmailRequested....");
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Email sign in failed'));
     } catch (e) {

@@ -154,6 +154,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
+                            backgroundColor: colorScheme.primary,
+                            foregroundColor: colorScheme.onPrimary,
                           ),
                           onPressed: isLoading
                               ? null
@@ -193,7 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       onPressed: () {
                         // Navigate back to the login screen
-                        context.go('/login');
+                        context.pop();
                       },
                       child: Text(
                         'Have account? Sign In',
@@ -222,10 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
-      decoration: InputDecoration(
-        hintText: hintText,
-        // The border style is defined globally in main.dart via FlexColorScheme
-      ),
+      decoration: InputDecoration(hintText: hintText),
       // Add validator for form validation if needed
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -249,10 +248,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       decoration: InputDecoration(
         hintText: hintText,
         suffixIcon: IconButton(
-          icon: Icon(
-            isObscured ? Icons.visibility_off : Icons.visibility,
-            color: Colors.grey,
-          ),
+          icon: Icon(isObscured ? Icons.visibility_off : Icons.visibility),
           onPressed: onToggleVisibility,
         ),
       ),
