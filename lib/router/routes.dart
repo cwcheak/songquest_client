@@ -41,7 +41,7 @@ class Routes {
 
   void initRoute() {
     _router = GoRouter(
-      initialLocation: '/',
+      initialLocation: '/login',
       navigatorKey: _rootNavigatorKey,
       redirect: (context, state) {
         // Check authentication state using AuthBloc
@@ -63,7 +63,7 @@ class Routes {
 
         // Redirect to home if authenticated and on login route
         if (isAuthenticated && isLoginRoute) {
-          return '/';
+          return '/home';
         }
 
         // No redirection needed
@@ -102,7 +102,7 @@ class Routes {
               navigatorKey: _homeNavigatorKey,
               routes: [
                 GoRoute(
-                  path: '/',
+                  path: '/home',
                   name: 'Home',
                   pageBuilder: (context, state) =>
                       transitionResolver(const HomePage()),

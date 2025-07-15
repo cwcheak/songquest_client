@@ -31,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
+    // Logger.instance.d("_onUserChanged: event.firebaseUser: ${event.firebaseUser}");
     if (event.firebaseUser != null) {
       emit(AuthAuthenticated(event.firebaseUser!));
     } else {
@@ -42,8 +43,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignInWithEmailRequested event,
     Emitter<AuthState> emit,
   ) async {
-    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
-    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
+    // Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
+    // Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
 
     emit(const AuthLoading());
     try {

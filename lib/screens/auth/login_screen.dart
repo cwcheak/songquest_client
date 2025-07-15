@@ -42,6 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
             SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
         }
+        if (state is AuthAuthenticated) {
+          context.go('/home');
+        }
       },
       child: Scaffold(
         body: SafeArea(
