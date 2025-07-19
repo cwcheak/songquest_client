@@ -19,8 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController(text: 'sample@email.com');
-    _passwordController = TextEditingController(text: '1234567890');
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
   }
 
   @override
@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
-                      hintText: 'sample@email.com',
+                      // hintText: 'sample@email.com',
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
                     decoration: InputDecoration(
-                      hintText: '****************',
+                      // hintText: '****************',
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible

@@ -5,6 +5,7 @@ import 'package:songquest/screens/auth/login_screen.dart';
 import 'package:songquest/screens/auth/register_screen.dart';
 import 'package:songquest/screens/auth/forgot_password_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
+import 'package:songquest/screens/debug/debug_screen.dart';
 import 'package:songquest/screens/settings/settings_screen.dart';
 import 'package:songquest/screens/home/home_page.dart';
 import 'package:songquest/screens/scaffold_home_page.dart';
@@ -17,6 +18,9 @@ class Routes {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _homeNavigatorKey = GlobalKey<NavigatorState>(
     debugLabel: 'home',
+  );
+  static final _debugNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: 'debug',
   );
   static final _moreNavigatorKey = GlobalKey<NavigatorState>(
     debugLabel: 'more',
@@ -106,6 +110,17 @@ class Routes {
                   name: 'Home',
                   pageBuilder: (context, state) =>
                       transitionResolver(const HomePage()),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _debugNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: '/debug',
+                  name: 'Debug',
+                  pageBuilder: (context, state) =>
+                      transitionResolver(DebugScreen()),
                 ),
               ],
             ),

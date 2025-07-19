@@ -104,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // E-mail Field
                     _buildTextField(
                       controller: _emailController,
-                      hintText: 'E-mail',
+                      hintText: 'Email',
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 16),
@@ -224,6 +224,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
+      autocorrect: false,
       decoration: InputDecoration(hintText: hintText),
       // Add validator for form validation if needed
       validator: (value) {
