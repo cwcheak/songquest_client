@@ -114,4 +114,15 @@ class AuthenticationRepository {
       );
     }
   }
+
+  Future<void> sendVerificationEmail() async {
+    try {
+      await _firebaseAuth.currentUser?.sendEmailVerification();
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw firebase_auth.FirebaseAuthException(
+        code: e.code,
+        message: e.message,
+      );
+    }
+  }
 }

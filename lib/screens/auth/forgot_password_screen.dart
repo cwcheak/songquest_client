@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
+import 'package:songquest/helper/snackbar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -33,17 +34,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          showAppSnackBar(context, state.message, isError: true);
         } else if (state is AuthPasswordResetEmailSent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Password reset email sent! Please check your inbox.',
-              ),
-              backgroundColor: Colors.green,
-            ),
+          showAppSnackBar(
+            context,
+            'Password reset email sent! Please check your inbox.',
           );
           context.pop(); // Return to previous screen
         }
@@ -118,11 +113,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   ),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please enter your email'),
-                                    backgroundColor: Colors.red,
-                                  ),
+                                showAppSnackBar(
+                                  context,
+                                  'Please enter your email',
+                                  isError: true,
                                 );
                               }
                             },

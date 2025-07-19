@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:songquest/screens/auth/login_screen.dart';
 import 'package:songquest/screens/auth/register_screen.dart';
 import 'package:songquest/screens/auth/forgot_password_screen.dart';
+import 'package:songquest/screens/auth/confirmation_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
 import 'package:songquest/screens/debug/debug_screen.dart';
 import 'package:songquest/screens/settings/settings_screen.dart';
@@ -54,9 +55,11 @@ class Routes {
         final isLoginRoute = state.uri.path == '/login';
         final isRegisterRoute = state.uri.path == '/register';
         final isForgotPasswordRoute = state.uri.path == '/forgot-password';
+        final isConfirmationRoute = state.uri.path == '/confirmation';
 
-        // Allow access to register or forgot password routes for unauthenticated users
-        if (!isAuthenticated && (isRegisterRoute || isForgotPasswordRoute)) {
+        // Allow access to register, forgot password, or confirmation routes for unauthenticated users
+        if (!isAuthenticated &&
+            (isRegisterRoute || isForgotPasswordRoute || isConfirmationRoute)) {
           return null;
         }
 
@@ -91,6 +94,15 @@ class Routes {
           name: 'Forgot Password',
           pageBuilder: (context, state) =>
               transitionResolver(const ForgotPasswordScreen()),
+        ),
+        GoRoute(
+          path: '/confirmation',
+          name: 'Confirmation',
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final email = extra?['email'] as String? ?? '';
+            return transitionResolver(ConfirmationScreen(email: email));
+          },
         ),
         // GoRoute(
         //   path: '/create-account',

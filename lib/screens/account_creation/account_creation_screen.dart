@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
+import 'package:songquest/helper/snackbar.dart';
 import 'package:songquest/screens/components/theme/theme.dart';
 
 class AccountCreationScreen extends StatefulWidget {
@@ -31,9 +32,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthFailure) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            showAppSnackBar(context, state.message, isError: true);
           }
         },
         builder: (context, state) {

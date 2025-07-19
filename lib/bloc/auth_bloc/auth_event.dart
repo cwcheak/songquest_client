@@ -30,3 +30,8 @@ class AuthSendPasswordResetEmailRequested extends AuthEvent {
   final String email;
   AuthSendPasswordResetEmailRequested({required this.email});
 }
+
+class AuthSendVerificationEmailRequested extends AuthEvent {
+  final String email;
+  AuthSendVerificationEmailRequested({required this.email});
+}

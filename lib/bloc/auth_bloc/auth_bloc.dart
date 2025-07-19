@@ -28,6 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     // on<AuthSignInWithFacebookRequested>(_onSignInWithFacebookRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
     on<AuthSendPasswordResetEmailRequested>(_onSendPasswordResetEmailRequested);
+    on<AuthSendVerificationEmailRequested>(_onSendVerificationEmailRequested);
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
@@ -132,6 +133,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(const AuthPasswordResetEmailSent());
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Password reset failed'));
+    } catch (e) {
+      emit(AuthFailure(e.toString()));
+    }
+  }
+
+  Future<void> _onSendVerificationEmailRequested(
+    AuthSendVerificationEmailRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    try {
+      await _authenticationRepository.sendVerificationEmail();
+      emit(const AuthVerificationEmailSent());
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      emit(AuthFailure(e.message ?? 'Failed to send verification email'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }

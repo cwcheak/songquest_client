@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
+import 'package:songquest/helper/snackbar.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -53,22 +54,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
-        } else if (state is AuthAuthenticated) {
-          // This won't happen since we sign out after registration
+          showAppSnackBar(context, state.message, isError: true);
         } else if (state is AuthUnauthenticated) {
-          // Show success message after email verification sent
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Verification email sent! Please check your inbox.',
-              ),
-              backgroundColor: Colors.green,
-            ),
+          context.push(
+            '/confirmation',
+            extra: {'email': _emailController.text},
           );
-          context.go('/login');
         }
       },
       child: Scaffold(
