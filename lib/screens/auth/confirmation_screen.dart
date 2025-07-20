@@ -54,7 +54,7 @@ class ConfirmationScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: textTheme.bodyLarge,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 36),
                 Text(
                   email,
                   textAlign: TextAlign.center,
@@ -62,7 +62,7 @@ class ConfirmationScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 36),
                 Text(
                   'Check your email and click on the confirmation link to continue.',
                   textAlign: TextAlign.center,

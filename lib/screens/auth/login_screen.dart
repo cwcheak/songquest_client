@@ -64,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                    autocorrect: false,
                     decoration: const InputDecoration(
                       // hintText: 'sample@email.com',
                     ),
@@ -76,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   TextField(
                     controller: _passwordController,
                     obscureText: !_isPasswordVisible,
+                    autocorrect: false,
                     decoration: InputDecoration(
                       // hintText: '****************',
                       suffixIcon: IconButton(
