@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:songquest/helper/logger.dart';
 import 'package:songquest/screens/auth/login_screen.dart';
 import 'package:songquest/screens/auth/register_screen.dart';
 import 'package:songquest/screens/auth/forgot_password_screen.dart';
@@ -46,16 +47,28 @@ class Routes {
 
   void initRoute() {
     _router = GoRouter(
-      initialLocation: '/login',
       navigatorKey: _rootNavigatorKey,
       redirect: (context, state) {
         // Check authentication state using AuthBloc
         final authState = context.read<AuthBloc>().state;
+
+        // If still checking auth state, stay on current route
+        if (authState is AuthChecking) {
+          return null;
+        }
+
         final isAuthenticated = authState is AuthAuthenticated;
         final isLoginRoute = state.uri.path == '/login';
         final isRegisterRoute = state.uri.path == '/register';
         final isForgotPasswordRoute = state.uri.path == '/forgot-password';
         final isConfirmationRoute = state.uri.path == '/confirmation';
+
+        Logger.instance.d('Redirecting to ${state.uri.path}');
+
+        // Handle initial route determination
+        if (state.uri.path == '/') {
+          return isAuthenticated ? '/home' : '/login';
+        }
 
         // Allow access to register, forgot password, or confirmation routes for unauthenticated users
         if (!isAuthenticated &&
@@ -77,6 +90,12 @@ class Routes {
         return null;
       },
       routes: [
+        GoRoute(
+          path: '/',
+          pageBuilder: (context, state) => transitionResolver(
+            const Scaffold(body: Center(child: CircularProgressIndicator())),
+          ),
+        ),
         GoRoute(
           path: '/login',
           name: 'Login',

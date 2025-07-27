@@ -14,13 +14,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required AuthenticationRepository authenticationRepository})
     : _authenticationRepository = authenticationRepository,
-      super(const AuthInitial()) {
-    // Listen to authentication state changes
-    _userSubscription = _authenticationRepository.user.listen(
-      (user) => add(AuthUserChanged(user)),
-    );
-
-    // Event handlers
+      super(const AuthChecking()) {
+    // Register event handlers first
     on<AuthUserChanged>(_onUserChanged);
     on<AuthSignInWithEmailRequested>(_onSignInWithEmailRequested);
     on<AuthSignUpWithEmailRequested>(_onSignUpWithEmailRequested);
@@ -29,6 +24,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSignOutRequested>(_onSignOutRequested);
     on<AuthSendPasswordResetEmailRequested>(_onSendPasswordResetEmailRequested);
     on<AuthSendVerificationEmailRequested>(_onSendVerificationEmailRequested);
+
+    // Immediately check current auth state
+    _checkCurrentAuthState();
+
+    // Listen to authentication state changes
+    _userSubscription = _authenticationRepository.user.listen(
+      (user) => add(AuthUserChanged(user)),
+    );
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
@@ -142,7 +145,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSendVerificationEmailRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(const AuthLoading());
     try {
       await _authenticationRepository.sendVerificationEmail();
       emit(const AuthVerificationEmailSent());
@@ -150,6 +152,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthFailure(e.message ?? 'Failed to send verification email'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
+    }
+  }
+
+  void _checkCurrentAuthState() {
+    try {
+      // Check current auth state immediately
+      final currentUser = _authenticationRepository.currentUser;
+      if (currentUser != null) {
+        add(AuthUserChanged(currentUser));
+      } else {
+        add(AuthUserChanged(null));
+      }
+    } catch (e) {
+      // Handle any errors during auth state check
+      Logger.instance.e('Error checking auth state: $e');
+      add(AuthUserChanged(null));
     }
   }
 
