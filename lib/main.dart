@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'firebase_options.dart';
 import 'package:songquest/app.dart';
 // import 'package:songquest/helper/ability.dart';
@@ -17,9 +20,12 @@ import 'package:songquest/repo/data/settings_data.dart';
 import 'package:songquest/repo/settings_repo.dart';
 import 'package:songquest/repo/api_server.dart';
 import 'package:songquest/repo/authentication_repo.dart';
+import 'package:songquest/router/routes.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize Firebase Local Emulator Suite
@@ -66,9 +72,11 @@ void main() async {
   final settingRepo = SettingsRepository(settingProvider);
   final cacheRepo = CacheRepository(CacheDataProvider(db));
   final authenticationRepo = AuthenticationRepository();
+  final authBloc = AuthBloc(authenticationRepository: authenticationRepo);
 
   APIServer().init(settingRepo);
   Cache().init(settingRepo, cacheRepo);
+  Routes().init(settingRepo, authBloc);
 
   // Retrieve client's ability from server
   /*
@@ -83,11 +91,13 @@ void main() async {
 
   runApp(
     Phoenix(
-      //child: MyApp(),
-      child: App(
-        settingRepo: settingRepo,
-        cacheRepo: cacheRepo,
-        authenticationRepo: authenticationRepo,
+      child: MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider.value(value: settingRepo),
+          RepositoryProvider.value(value: cacheRepo),
+          RepositoryProvider.value(value: authenticationRepo),
+        ],
+        child: BlocProvider.value(value: authBloc, child: const App()),
       ),
     ),
   );

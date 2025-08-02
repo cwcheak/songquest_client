@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:songquest/helper/logger.dart';
+import 'package:songquest/helper/go_router_refresh_stream.dart';
 import 'package:songquest/screens/auth/login_screen.dart';
 import 'package:songquest/screens/auth/register_screen.dart';
 import 'package:songquest/screens/auth/forgot_password_screen.dart';
@@ -40,14 +41,15 @@ class Routes {
   late final GoRouter _router;
   GoRouter get router => _router;
 
-  init(SettingsRepository settingRepository) {
+  init(SettingsRepository settingRepository, AuthBloc authBloc) {
     _settingRepository = settingRepository;
-    initRoute();
+    initRoute(authBloc);
   }
 
-  void initRoute() {
+  void initRoute(AuthBloc authBloc) {
     _router = GoRouter(
       navigatorKey: _rootNavigatorKey,
+      refreshListenable: GoRouterRefreshStream(authBloc.stream),
       redirect: (context, state) {
         // Check authentication state using AuthBloc
         final authState = context.read<AuthBloc>().state;

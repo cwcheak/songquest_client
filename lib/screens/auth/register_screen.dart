@@ -38,18 +38,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           value: '',
           validators: [
             Validators.required,
-            Validators.pattern(r'^[0-9]{10,11}$'),
+            Validators.pattern(r'^(01|\+601)[0-9]{8,9}$'),
           ],
         ),
         'password': FormControl<String>(
           value: '',
-          validators: [
-            Validators.required,
-            Validators.minLength(8),
-            Validators.pattern(
-              r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$',
-            ),
-          ],
+          validators: [Validators.required, Validators.minLength(8)],
         ),
         'confirmPassword': FormControl<String>(
           value: '',
@@ -120,14 +114,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   // Phone Field
                   ReactiveTextField<String>(
                     formControlName: 'phone',
-                    decoration: const InputDecoration(labelText: 'Phone'),
+                    decoration: const InputDecoration(
+                      labelText: 'Phone',
+                      errorMaxLines: 2,
+                    ),
                     keyboardType: TextInputType.phone,
                     autocorrect: false,
                     validationMessages: {
                       ValidationMessage.required: (_) =>
                           'Phone number is required',
                       ValidationMessage.pattern: (_) =>
-                          'Please enter a valid phone number',
+                          'Please enter a valid Malaysian mobile number (e.g., 0123456789 or +60123456789)',
                     },
                   ),
                   const SizedBox(height: 16),
@@ -139,6 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     autocorrect: false,
                     decoration: InputDecoration(
                       labelText: 'Password',
+                      errorMaxLines: 2,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isPasswordVisible
@@ -156,8 +154,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ValidationMessage.required: (_) => 'Password is required',
                       ValidationMessage.minLength: (_) =>
                           'Password must be at least 8 characters',
-                      ValidationMessage.pattern: (_) =>
-                          'Password must contain uppercase, lowercase, number, and special character',
                     },
                   ),
                   const SizedBox(height: 16),
@@ -169,6 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     autocorrect: false,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
+                      errorMaxLines: 2,
                       suffixIcon: IconButton(
                         icon: Icon(
                           _isConfirmPasswordVisible

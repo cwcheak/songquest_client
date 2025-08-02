@@ -9,12 +9,11 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthenticationRepository _authenticationRepository;
+  final AuthenticationRepository authenticationRepository;
   late final StreamSubscription<firebase_auth.User?> _userSubscription;
 
-  AuthBloc({required AuthenticationRepository authenticationRepository})
-    : _authenticationRepository = authenticationRepository,
-      super(const AuthChecking()) {
+  AuthBloc({required this.authenticationRepository})
+    : super(const AuthChecking()) {
     // Register event handlers first
     on<AuthUserChanged>(_onUserChanged);
     on<AuthSignInWithEmailRequested>(_onSignInWithEmailRequested);
@@ -26,16 +25,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSendVerificationEmailRequested>(_onSendVerificationEmailRequested);
 
     // Immediately check current auth state
-    _checkCurrentAuthState();
+    // _checkCurrentAuthState();
 
     // Listen to authentication state changes
-    _userSubscription = _authenticationRepository.user.listen(
+    _userSubscription = authenticationRepository.user.listen(
       (user) => add(AuthUserChanged(user)),
     );
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
-    // Logger.instance.d("_onUserChanged: event.firebaseUser: ${event.firebaseUser}");
+    Logger.instance.d(
+      "_onUserChanged: event.firebaseUser: ${event.firebaseUser}",
+    );
     if (event.firebaseUser != null) {
       emit(AuthAuthenticated(event.firebaseUser!));
     } else {
@@ -52,15 +53,38 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     emit(const AuthLoading());
     try {
-      Logger.instance.d("Start _onSignInWithEmailRequested....");
-      await _authenticationRepository.signInWithEmailAndPassword(
-        email: event.email,
-        password: event.password,
-      );
-      Logger.instance.d("Completed _onSignInWithEmailRequested....");
+      // Logger.instance.d("Start _onSignInWithEmailRequested....");
+      final userCredential = await authenticationRepository
+          .signInWithEmailAndPassword(
+            email: event.email,
+            password: event.password,
+          );
+      // Logger.instance.d("Completed _onSignInWithEmailRequested....");
+
+      if (userCredential.user != null && !userCredential.user!.emailVerified) {
+        await authenticationRepository.signOut();
+        emit(const AuthFailure('Please verify your email before logging in.'));
+      }
     } on firebase_auth.FirebaseAuthException catch (e) {
-      emit(AuthFailure(e.message ?? 'Email sign in failed'));
+      // Logger.instance.d(
+      //   "_onSignInWithEmailRequested exception: e.message: ${e}",
+      // );
+      // Logger.instance.d(
+      //   "_onSignInWithEmailRequested exception: e.message: ${e.message}",
+      // );
+      final message = switch (e.code) {
+        'user-disabled' =>
+          'This account has been disabled. Please contact the administrator.',
+        'user-not-found' => 'User ${event.email} not found.',
+        'network-request-failed' => 'No internet connection.',
+        _ => 'Unable to sign in. Please check your email or password.',
+      };
+
+      emit(AuthFailure(message));
     } catch (e) {
+      // Logger.instance.d(
+      //   "_onSignInWithEmailRequested catch: e.toString: ${e.toString()}",
+      // );
       emit(AuthFailure(e.toString()));
     }
   }
@@ -71,7 +95,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthLoading());
     try {
-      await _authenticationRepository.signUpWithEmailAndPassword(
+      await authenticationRepository.signUpWithEmailAndPassword(
         email: event.email,
         password: event.password,
       );
@@ -116,7 +140,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthLoading());
     try {
-      await _authenticationRepository.signOut();
+      await authenticationRepository.signOut();
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Sign out failed'));
     } catch (e) {
@@ -130,9 +154,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthLoading());
     try {
-      await _authenticationRepository.sendPasswordResetEmail(
-        email: event.email,
-      );
+      await authenticationRepository.sendPasswordResetEmail(email: event.email);
       emit(const AuthPasswordResetEmailSent());
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Password reset failed'));
@@ -146,7 +168,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      await _authenticationRepository.sendVerificationEmail();
+      await authenticationRepository.sendVerificationEmail();
       emit(const AuthVerificationEmailSent());
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Failed to send verification email'));
@@ -158,7 +180,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _checkCurrentAuthState() {
     try {
       // Check current auth state immediately
-      final currentUser = _authenticationRepository.currentUser;
+      final currentUser = authenticationRepository.currentUser;
       if (currentUser != null) {
         add(AuthUserChanged(currentUser));
       } else {
