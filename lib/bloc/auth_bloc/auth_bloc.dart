@@ -48,43 +48,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignInWithEmailRequested event,
     Emitter<AuthState> emit,
   ) async {
-    // Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
-    // Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
+    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
+    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
 
     emit(const AuthLoading());
     try {
-      // Logger.instance.d("Start _onSignInWithEmailRequested....");
+      Logger.instance.d("Start _onSignInWithEmailRequested....");
       final userCredential = await authenticationRepository
           .signInWithEmailAndPassword(
             email: event.email,
             password: event.password,
           );
-      // Logger.instance.d("Completed _onSignInWithEmailRequested....");
+      Logger.instance.d("Completed _onSignInWithEmailRequested....");
 
       if (userCredential.user != null && !userCredential.user!.emailVerified) {
         await authenticationRepository.signOut();
         emit(const AuthFailure('Please verify your email before logging in.'));
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
-      // Logger.instance.d(
-      //   "_onSignInWithEmailRequested exception: e.message: ${e}",
-      // );
-      // Logger.instance.d(
-      //   "_onSignInWithEmailRequested exception: e.message: ${e.message}",
-      // );
-      final message = switch (e.code) {
-        'user-disabled' =>
-          'This account has been disabled. Please contact the administrator.',
-        'user-not-found' => 'User ${event.email} not found.',
-        'network-request-failed' => 'No internet connection.',
-        _ => 'Unable to sign in. Please check your email or password.',
-      };
-
-      emit(AuthFailure(message));
+      Logger.instance.d(
+        "_onSignInWithEmailRequested exception: e.message: ${e.message}",
+      );
+      emit(AuthFailure(e.message ?? 'Email sign in failed'));
     } catch (e) {
-      // Logger.instance.d(
-      //   "_onSignInWithEmailRequested catch: e.toString: ${e.toString()}",
-      // );
+      Logger.instance.d(
+        "_onSignInWithEmailRequested catch: e.toString: ${e.toString()}",
+      );
       emit(AuthFailure(e.toString()));
     }
   }
