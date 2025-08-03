@@ -66,10 +66,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const AuthFailure('Please verify your email before logging in.'));
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
-      Logger.instance.d(
-        "_onSignInWithEmailRequested exception: e.message: ${e.message}",
-      );
-      emit(AuthFailure(e.message ?? 'Email sign in failed'));
+      final message = switch (e.code) {
+        'user-disabled' =>
+          'This account has been disabled. Please contact the administrator.',
+        'user-not-found' => 'User ${event.email} not found.',
+        'network-request-failed' => 'No internet connection.',
+        _ => 'Unable to sign in. Please check your email or password.',
+      };
+
+      emit(AuthFailure(message));
     } catch (e) {
       Logger.instance.d(
         "_onSignInWithEmailRequested catch: e.toString: ${e.toString()}",
@@ -166,21 +171,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  void _checkCurrentAuthState() {
-    try {
-      // Check current auth state immediately
-      final currentUser = authenticationRepository.currentUser;
-      if (currentUser != null) {
-        add(AuthUserChanged(currentUser));
-      } else {
-        add(AuthUserChanged(null));
-      }
-    } catch (e) {
-      // Handle any errors during auth state check
-      Logger.instance.e('Error checking auth state: $e');
-      add(AuthUserChanged(null));
-    }
-  }
+  // void _checkCurrentAuthState() {
+  //   try {
+  //     // Check current auth state immediately
+  //     final currentUser = authenticationRepository.currentUser;
+  //     if (currentUser != null) {
+  //       add(AuthUserChanged(currentUser));
+  //     } else {
+  //       add(AuthUserChanged(null));
+  //     }
+  //   } catch (e) {
+  //     // Handle any errors during auth state check
+  //     Logger.instance.e('Error checking auth state: $e');
+  //     add(AuthUserChanged(null));
+  //   }
+  // }
 
   @override
   Future<void> close() {

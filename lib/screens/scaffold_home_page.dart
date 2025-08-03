@@ -10,7 +10,7 @@ class ScaffoldHomePage extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
   int _calculateSelectedIndex(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
+    final location = GoRouterState.of(context).matchedLocation;
     // Map shell branches to tab indices:
     if (location.startsWith('/home')) return 0;
     if (location.startsWith('/debug')) return 1;

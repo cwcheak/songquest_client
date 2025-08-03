@@ -3,12 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
-import 'package:songquest/helper/logger.dart';
 import 'package:songquest/screens/components/theme/theme.dart';
 import 'package:songquest/repo/settings_repo.dart';
 import 'package:songquest/router/routes.dart';
 import 'package:songquest/helper/constant.dart';
-import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class App extends StatefulWidget {

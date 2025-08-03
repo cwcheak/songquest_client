@@ -60,15 +60,16 @@ class Routes {
         }
 
         final isAuthenticated = authState is AuthAuthenticated;
-        final isLoginRoute = state.uri.path == '/login';
-        final isRegisterRoute = state.uri.path == '/register';
-        final isForgotPasswordRoute = state.uri.path == '/forgot-password';
-        final isConfirmationRoute = state.uri.path == '/confirmation';
+        final isLoginRoute = state.matchedLocation == '/login';
+        final isRegisterRoute = state.matchedLocation == '/register';
+        final isForgotPasswordRoute =
+            state.matchedLocation == '/forgot-password';
+        final isConfirmationRoute = state.matchedLocation == '/confirmation';
 
         Logger.instance.d('Redirecting to ${state.uri.path}');
 
         // Handle initial route determination
-        if (state.uri.path == '/') {
+        if (state.matchedLocation == '/') {
           return isAuthenticated ? '/home' : '/login';
         }
 
