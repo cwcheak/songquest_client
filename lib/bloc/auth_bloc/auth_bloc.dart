@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart';
@@ -34,10 +35,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
+    FirebaseCrashlytics.instance.log("On User changed : ${event.firebaseUser}");
+
     Logger.instance.d(
       "_onUserChanged: event.firebaseUser: ${event.firebaseUser}",
     );
-    if (event.firebaseUser != null) {
+    if (event.firebaseUser != null &&
+        event.firebaseUser?.emailVerified == true) {
       emit(AuthAuthenticated(event.firebaseUser!));
     } else {
       emit(const AuthUnauthenticated());
@@ -74,6 +78,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _ => 'Unable to sign in. Please check your email or password.',
       };
 
+      FirebaseCrashlytics.instance.log(
+        'User sign in with email ${event.email} failed: ${message}',
+      );
+
       emit(AuthFailure(message));
     } catch (e) {
       Logger.instance.d(
@@ -87,6 +95,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUpWithEmailRequested event,
     Emitter<AuthState> emit,
   ) async {
+    Logger.instance.d("Start _onSignUpWithEmailRequested....");
     emit(const AuthLoading());
     try {
       await authenticationRepository.signUpWithEmailAndPassword(

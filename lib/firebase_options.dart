@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDjCk7TTLbb9qc7cemUjb0cOFSFbnTdTSw',
-    appId: '1:427260981643:ios:e96f5efca945d5625d3f8e',
+    appId: '1:427260981643:ios:54b805972fa05f045d3f8e',
     messagingSenderId: '427260981643',
     projectId: 'songquest-463608',
     storageBucket: 'songquest-463608.firebasestorage.app',
-    iosBundleId: 'com.example.songquest',
+    iosBundleId: 'com.terminusdigital.songquest',
   );
+
 }

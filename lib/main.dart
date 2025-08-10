@@ -21,30 +21,20 @@ import 'package:songquest/repo/settings_repo.dart';
 import 'package:songquest/repo/api_server.dart';
 import 'package:songquest/repo/authentication_repo.dart';
 import 'package:songquest/router/routes.dart';
+import 'package:songquest/helper/crashlytics_service.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize Firebase Local Emulator Suite
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-  // await FirebaseAuth.instance.signOut();
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
-  FlutterError.onError = (FlutterErrorDetails details) {
-    if (details.library == 'rendering library' ||
-        details.library == 'image resource service') {
-      return;
-    }
-
-    Logger.instance.e(
-      details.summary,
-      error: details.exception,
-      stackTrace: details.stack,
-    );
-    Logger.instance.d(details.stack);
-  };
+  // Initialize Crashlytics
+  await CrashlyticsService().initialize();
 
   // Open and load database, if need to perform version migration
   final db = await databaseFactory.openDatabase(

@@ -17,11 +17,19 @@ class DebugScreen extends StatelessWidget {
               context.go('/login');
             }
           },
-          builder: (context, state) => TextButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(AuthSignOutRequested());
-            },
-            child: const Text('Logout'),
+          builder: (context, state) => Column(
+            children: [
+              TextButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(AuthSignOutRequested());
+                },
+                child: const Text('Logout'),
+              ),
+              TextButton(
+                onPressed: () => throw Exception(),
+                child: const Text("Throw Test Exception"),
+              ),
+            ],
           ),
         ),
       ),
