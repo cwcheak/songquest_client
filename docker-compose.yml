@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  bugsink:
+    image: bugsink/bugsink:latest
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${BUGSINK_SECRET_KEY}
+      CREATE_SUPERUSER: ${BUGSINK_CREATE_SUPERUSER}
+      PORT: ${BUGSINK_PORT}
+    restart: unless-stopped

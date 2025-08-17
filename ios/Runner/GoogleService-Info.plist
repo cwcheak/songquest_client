@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.songquest</string>
+	<string>com.terminusdigital.songquest</string>
 	<key>PROJECT_ID</key>
 	<string>songquest-463608</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:427260981643:ios:e96f5efca945d5625d3f8e</string>
+	<string>1:427260981643:ios:54b805972fa05f045d3f8e</string>
 </dict>
 </plist>

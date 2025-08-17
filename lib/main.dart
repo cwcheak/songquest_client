@@ -29,7 +29,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // Initialize Firebase Local Emulator Suite
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   // await FirebaseAuth.instance.signOut();
 
   FlutterError.onError = (FlutterErrorDetails details) {
