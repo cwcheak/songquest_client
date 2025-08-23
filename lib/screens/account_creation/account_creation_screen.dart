@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'package:songquest/helper/snackbar.dart';
-import 'package:songquest/screens/components/theme/theme.dart';
 
 class AccountCreationScreen extends StatefulWidget {
   const AccountCreationScreen({super.key});

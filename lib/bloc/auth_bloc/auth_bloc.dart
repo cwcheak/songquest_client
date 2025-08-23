@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:sentry/sentry.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:songquest/helper/logger.dart';
 import 'package:songquest/repo/authentication_repo.dart';
 
@@ -32,8 +32,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
-    FirebaseCrashlytics.instance.log("On User changed : ${event.firebaseUser}");
-
     Logger.instance.d(
       "_onUserChanged: event.firebaseUser: ${event.firebaseUser}",
     );

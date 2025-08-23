@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -23,7 +23,6 @@ import 'package:songquest/repo/settings_repo.dart';
 import 'package:songquest/repo/api_server.dart';
 import 'package:songquest/repo/authentication_repo.dart';
 import 'package:songquest/router/routes.dart';
-import 'package:songquest/helper/crashlytics_service.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -34,9 +33,6 @@ void main() async {
 
   // Initialize Firebase Local Emulator Suite
   // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-
-  // Initialize Crashlytics
-  await CrashlyticsService().initialize();
 
   // Open and load database, if need to perform version migration
   final db = await databaseFactory.openDatabase(
