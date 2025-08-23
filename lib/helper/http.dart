@@ -1,7 +1,8 @@
-import 'package:songquest/helper/logger.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
+import 'package:native_dio_adapter/native_dio_adapter.dart';
+import 'package:songquest/helper/logger.dart';
 
 class HttpClient {
   static final dio = Dio();
@@ -19,6 +20,7 @@ class HttpClient {
   );
 
   static init() {
+    dio.httpClientAdapter = NativeAdapter();
     dio.interceptors.add(DioCacheInterceptor(options: cacheOptions));
     dio.interceptors.add(
       RetryInterceptor(
