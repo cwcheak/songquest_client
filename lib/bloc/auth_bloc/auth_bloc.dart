@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:flutter/foundation.dart';
+import 'package:sentry/sentry.dart';
 import 'package:songquest/helper/logger.dart';
 import 'package:songquest/repo/authentication_repo.dart';
 
@@ -24,9 +25,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthSendPasswordResetEmailRequested>(_onSendPasswordResetEmailRequested);
     on<AuthSendVerificationEmailRequested>(_onSendVerificationEmailRequested);
 
-    // Immediately check current auth state
-    // _checkCurrentAuthState();
-
     // Listen to authentication state changes
     _userSubscription = authenticationRepository.user.listen(
       (user) => add(AuthUserChanged(user)),
@@ -38,6 +36,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       "_onUserChanged: event.firebaseUser: ${event.firebaseUser}",
     );
     if (event.firebaseUser != null) {
+      Sentry.captureMessage(
+        "User '${event.firebaseUser!.email}' logged in",
+        level: SentryLevel.debug,
+      );
       emit(AuthAuthenticated(event.firebaseUser!));
     } else {
       emit(const AuthUnauthenticated());
@@ -50,6 +52,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
     Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
+    Sentry.captureMessage(
+      "User '${event.email}' is logging in...",
+      level: SentryLevel.debug,
+    );
 
     emit(const AuthLoading());
     try {
@@ -63,6 +69,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       if (userCredential.user != null && !userCredential.user!.emailVerified) {
         await authenticationRepository.signOut();
+        Sentry.captureMessage(
+          "User '${event.email}' failed to login. Reason: Email is not verified.",
+          level: SentryLevel.error,
+        );
         emit(const AuthFailure('Please verify your email before logging in.'));
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
@@ -74,10 +84,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _ => 'Unable to sign in. Please check your email or password.',
       };
 
+      Sentry.captureMessage(
+        "User '${event.email}' failed to login. Reason: ${e.code}",
+        level: SentryLevel.error,
+      );
+
       emit(AuthFailure(message));
     } catch (e) {
       Logger.instance.d(
         "_onSignInWithEmailRequested catch: e.toString: ${e.toString()}",
+      );
+      Sentry.captureMessage(
+        "User '${event.email}' failed to login. Exception: ${e.toString()}",
+        level: SentryLevel.error,
       );
       emit(AuthFailure(e.toString()));
     }
@@ -170,22 +189,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthFailure(e.toString()));
     }
   }
-
-  // void _checkCurrentAuthState() {
-  //   try {
-  //     // Check current auth state immediately
-  //     final currentUser = authenticationRepository.currentUser;
-  //     if (currentUser != null) {
-  //       add(AuthUserChanged(currentUser));
-  //     } else {
-  //       add(AuthUserChanged(null));
-  //     }
-  //   } catch (e) {
-  //     // Handle any errors during auth state check
-  //     Logger.instance.e('Error checking auth state: $e');
-  //     add(AuthUserChanged(null));
-  //   }
-  // }
 
   @override
   Future<void> close() {

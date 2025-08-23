@@ -4,11 +4,13 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'firebase_options.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 import 'package:songquest/app.dart';
 // import 'package:songquest/helper/ability.dart';
+import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'package:songquest/helper/logger.dart';
 import 'package:songquest/helper/constant.dart';
 import 'package:songquest/helper/cache.dart';
@@ -30,7 +32,6 @@ void main() async {
 
   // Initialize Firebase Local Emulator Suite
   // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
-  // await FirebaseAuth.instance.signOut();
 
   FlutterError.onError = (FlutterErrorDetails details) {
     if (details.library == 'rendering library' ||
@@ -89,16 +90,39 @@ void main() async {
   }
   */
 
-  runApp(
-    Phoenix(
-      child: MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider.value(value: settingRepo),
-          RepositoryProvider.value(value: cacheRepo),
-          RepositoryProvider.value(value: authenticationRepo),
-        ],
-        child: BlocProvider.value(value: authBloc, child: const App()),
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = 'http://63451c91aabe446cb36bef78492494ef@localhost:8000/1';
+      // Adds request headers and IP for users, for more info visit:
+      // https://docs.sentry.io/platforms/dart/guides/flutter/data-management/data-collected/
+      options.sendDefaultPii = true;
+    },
+    appRunner: () => runApp(
+      SentryWidget(
+        child: Phoenix(
+          child: MultiRepositoryProvider(
+            providers: [
+              RepositoryProvider.value(value: settingRepo),
+              RepositoryProvider.value(value: cacheRepo),
+              RepositoryProvider.value(value: authenticationRepo),
+            ],
+            child: BlocProvider.value(value: authBloc, child: const App()),
+          ),
+        ),
       ),
     ),
   );
+
+  // runApp(
+  //   Phoenix(
+  //     child: MultiRepositoryProvider(
+  //       providers: [
+  //         RepositoryProvider.value(value: settingRepo),
+  //         RepositoryProvider.value(value: cacheRepo),
+  //         RepositoryProvider.value(value: authenticationRepo),
+  //       ],
+  //       child: BlocProvider.value(value: authBloc, child: const App()),
+  //     ),
+  //   ),
+  // );
 }
