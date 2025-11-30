@@ -39,5 +39,24 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+
+    # Without this, Sentry fills build logs with warnings like:
+    #   `using '@_implementationOnly' without enabling library evolution for 'Sentry' may lead to instability during execution`
+    #
+    if target.name == 'Sentry'
+      target.build_configurations.each do |config|
+        config.build_settings['SWIFT_ENABLE_LIBRARY_EVOLUTION'] = 'YES'
+      end
+    end
+
+    # Optional but recommended on Apple Silicon Macs
+    target.build_configurations.each do |config|
+      # Exclude real-device arm64 when building for simulator (fixes dart_nativeassets error)
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
+
+      # Optional: also keep x86_64 excluded if you had it before
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'x86_64 i386'
+    end
+
   end
 end

@@ -50,8 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignInWithEmailRequested event,
     Emitter<AuthState> emit,
   ) async {
-    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.email}");
-    Logger.instance.d("_onSignInWithEmailRequested: event: ${event.password}");
+    Logger.instance.d(
+      "_onSignInWithEmailRequested: Email: ${event.email} | Password: ${event.password}",
+    );
     Sentry.captureMessage(
       "User '${event.email}' is logging in...",
       level: SentryLevel.debug,
@@ -65,15 +66,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             email: event.email,
             password: event.password,
           );
-      Logger.instance.d("Completed _onSignInWithEmailRequested....");
+      // Logger.instance.d("Completed _onSignInWithEmailRequested....");
 
       if (userCredential.user != null && !userCredential.user!.emailVerified) {
         await authenticationRepository.signOut();
+        Logger.instance.i(
+          "User '${event.email}' failed to login. Reason: Email is not verified.",
+        );
         Sentry.captureMessage(
           "User '${event.email}' failed to login. Reason: Email is not verified.",
           level: SentryLevel.error,
         );
         emit(const AuthFailure('Please verify your email before logging in.'));
+      } else {
+        Sentry.captureMessage(
+          "User '${event.email}' successfully logged in.",
+          level: SentryLevel.info,
+        );
+        Logger.instance.i("User '${event.email}' successfully logged in.");
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
       final message = switch (e.code) {
@@ -84,6 +94,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _ => 'Unable to sign in. Please check your email or password.',
       };
 
+      Logger.instance.e(
+        "User '${event.email}' failed to login. Reason: ${e.code}",
+      );
+
       Sentry.captureMessage(
         "User '${event.email}' failed to login. Reason: ${e.code}",
         level: SentryLevel.error,
@@ -91,7 +105,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
       emit(AuthFailure(message));
     } catch (e) {
-      Logger.instance.d(
+      Logger.instance.e(
         "_onSignInWithEmailRequested catch: e.toString: ${e.toString()}",
       );
       Sentry.captureMessage(

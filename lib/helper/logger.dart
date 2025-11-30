@@ -5,13 +5,9 @@ class Logger {
     printer: logger.PrettyPrinter(
       lineLength: 120,
       dateTimeFormat: logger.DateTimeFormat.dateAndTime,
-      colors: false,
-      noBoxingByDefault: true,
+      colors: true,
+      // noBoxingByDefault: true,
     ),
-    output: logger.MultiOutput(
-      [
-        logger.ConsoleOutput(),
-      ],
-    ),
+    output: logger.MultiOutput([logger.ConsoleOutput()]),
   );
 }

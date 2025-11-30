@@ -27,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               SettingsSection(
                 title: Text('Account Info'),
                 tiles: [
+                  SettingsTile.navigation(title: Text('Account Info')),
                   // SettingsTile(
                   //   title: Text(
                   //     state.user!.user.displayName(),
