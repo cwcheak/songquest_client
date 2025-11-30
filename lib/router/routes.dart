@@ -9,7 +9,10 @@ import 'package:songquest/screens/auth/forgot_password_screen.dart';
 import 'package:songquest/screens/auth/confirmation_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
 import 'package:songquest/screens/debug/debug_screen.dart';
-import 'package:songquest/screens/settings/settings_screen.dart';
+import 'package:songquest/screens/playlist/my_playlist_screen.dart';
+import 'package:songquest/screens/playlist/add_song_screen.dart';
+import 'package:songquest/screens/playlist/playlist_items_screen.dart';
+import 'package:songquest/screens/account/account_screen.dart';
 import 'package:songquest/screens/home/home_page.dart';
 import 'package:songquest/screens/scaffold_home_page.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
@@ -22,8 +25,14 @@ class Routes {
   static final _homeNavigatorKey = GlobalKey<NavigatorState>(
     debugLabel: 'home',
   );
-  static final _debugNavigatorKey = GlobalKey<NavigatorState>(
-    debugLabel: 'debug',
+  static final _orderNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: 'order',
+  );
+  static final _menuNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: 'menu',
+  );
+  static final _rewardsNavigatorKey = GlobalKey<NavigatorState>(
+    debugLabel: 'rewards',
   );
   static final _moreNavigatorKey = GlobalKey<NavigatorState>(
     debugLabel: 'more',
@@ -126,6 +135,24 @@ class Routes {
             return transitionResolver(ConfirmationScreen(email: email));
           },
         ),
+        GoRoute(
+          path: '/my-playlist',
+          name: 'My Playlist',
+          pageBuilder: (context, state) =>
+              transitionResolver(const MyPlaylistScreen()),
+        ),
+        GoRoute(
+          path: '/playlist-items',
+          name: 'Playlist Items',
+          pageBuilder: (context, state) =>
+              transitionResolver(const PlaylistItemsScreen()),
+        ),
+        GoRoute(
+          path: '/add-song',
+          name: 'Add Song',
+          pageBuilder: (context, state) =>
+              transitionResolver(const AddSongScreen()),
+        ),
         // GoRoute(
         //   path: '/create-account',
         //   name: 'CreateAccount',
@@ -148,13 +175,38 @@ class Routes {
               ],
             ),
             StatefulShellBranch(
-              navigatorKey: _debugNavigatorKey,
+              navigatorKey: _orderNavigatorKey,
               routes: [
                 GoRoute(
-                  path: '/debug',
-                  name: 'Debug',
-                  pageBuilder: (context, state) =>
-                      transitionResolver(DebugScreen()),
+                  path: '/order',
+                  name: 'Order',
+                  pageBuilder: (context, state) => transitionResolver(
+                    const Scaffold(body: Center(child: Text('Order'))),
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _menuNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: '/menu',
+                  name: 'Menu',
+                  pageBuilder: (context, state) => transitionResolver(
+                    const Scaffold(body: Center(child: Text('Menu'))),
+                  ),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              navigatorKey: _rewardsNavigatorKey,
+              routes: [
+                GoRoute(
+                  path: '/rewards',
+                  name: 'Rewards',
+                  pageBuilder: (context, state) => transitionResolver(
+                    const Scaffold(body: Center(child: Text('Rewards'))),
+                  ),
                 ),
               ],
             ),
@@ -164,9 +216,8 @@ class Routes {
                 GoRoute(
                   path: '/settings',
                   name: 'More',
-                  pageBuilder: (context, state) => transitionResolver(
-                    SettingsScreen(settingsRepo: _settingRepository),
-                  ),
+                  pageBuilder: (context, state) =>
+                      transitionResolver(const AccountScreen()),
                 ),
               ],
             ),

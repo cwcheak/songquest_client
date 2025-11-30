@@ -13,9 +13,11 @@ class ScaffoldHomePage extends StatelessWidget {
     final location = GoRouterState.of(context).matchedLocation;
     // Map shell branches to tab indices:
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/debug')) return 1;
-    if (location.startsWith('/settings')) return 2;
-    return 0; // Default to first tab
+    if (location.startsWith('/order')) return 1;
+    if (location.startsWith('/menu')) return 2;
+    if (location.startsWith('/rewards')) return 3;
+    if (location.startsWith('/settings')) return 4;
+    return 0;
   }
 
   @override
@@ -29,9 +31,23 @@ class ScaffoldHomePage extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _calculateSelectedIndex(context),
         destinations: const [
-          NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
-          NavigationDestination(label: 'Debug', icon: Icon(Icons.plus_one)),
-          NavigationDestination(label: 'More', icon: Icon(Icons.settings)),
+          NavigationDestination(label: 'Home', icon: Icon(Icons.home_outlined)),
+          NavigationDestination(
+            label: 'Order',
+            icon: Icon(Icons.receipt_long_outlined),
+          ),
+          NavigationDestination(
+            label: 'Menu',
+            icon: Icon(Icons.menu_book_outlined),
+          ),
+          NavigationDestination(
+            label: 'Rewards',
+            icon: Icon(Icons.card_giftcard_outlined),
+          ),
+          NavigationDestination(
+            label: 'Account',
+            icon: Icon(Icons.person_outline),
+          ),
         ],
         onDestinationSelected: onDestinationSelected,
       ),
