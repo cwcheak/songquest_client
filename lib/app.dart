@@ -46,13 +46,15 @@ class _AppState extends State<App> {
 
         return Sizer(
           builder: (context, orientation, deviceType) {
-            return MaterialApp.router(
-              title: appTitle,
-              themeMode: appTheme.mode,
-              theme: AppTheme.createLightThemeData(),
-              darkTheme: AppTheme.createDarkThemeData(),
-              debugShowCheckedModeBanner: false,
-              routerConfig: Routes().router,
+            return SafeArea(
+              child: MaterialApp.router(
+                title: appTitle,
+                themeMode: appTheme.mode,
+                theme: AppTheme.createLightThemeData(),
+                darkTheme: AppTheme.createDarkThemeData(),
+                debugShowCheckedModeBanner: false,
+                routerConfig: Routes().router,
+              ),
             );
           },
         );

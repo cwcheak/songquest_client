@@ -7,6 +7,10 @@ import 'package:songquest/screens/auth/login_screen.dart';
 import 'package:songquest/screens/auth/register_screen.dart';
 import 'package:songquest/screens/auth/forgot_password_screen.dart';
 import 'package:songquest/screens/auth/confirmation_screen.dart';
+import 'package:songquest/screens/bands/add_members_screen.dart';
+import 'package:songquest/screens/bands/band_details_screen.dart';
+import 'package:songquest/screens/bands/my_bands_screen.dart';
+import 'package:songquest/screens/bands/scan_band_qr_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
 import 'package:songquest/screens/debug/debug_screen.dart';
 import 'package:songquest/screens/playlist/my_playlist_screen.dart';
@@ -152,6 +156,36 @@ class Routes {
           name: 'Add Song',
           pageBuilder: (context, state) =>
               transitionResolver(const AddSongScreen()),
+        ),
+        GoRoute(
+          path: '/my-bands',
+          name: 'My Bands',
+          pageBuilder: (context, state) =>
+              transitionResolver(const MyBandsScreen()),
+        ),
+        GoRoute(
+          path: '/scan-band-qr',
+          name: 'Scan Band QR',
+          pageBuilder: (context, state) =>
+              transitionResolver(const ScanBandQrScreen()),
+        ),
+        GoRoute(
+          path: '/add-members',
+          name: 'Add Members',
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final bandName = extra?['bandName'] as String? ?? '';
+            return transitionResolver(AddMembersScreen(bandName: bandName));
+          },
+        ),
+        GoRoute(
+          path: '/band-details',
+          name: 'Band Details',
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final bandName = extra?['bandName'] as String? ?? '';
+            return transitionResolver(BandDetailsScreen(bandName: bandName));
+          },
         ),
         // GoRoute(
         //   path: '/create-account',

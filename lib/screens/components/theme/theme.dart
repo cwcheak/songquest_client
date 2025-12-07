@@ -4,6 +4,7 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 class AppTheme extends ChangeNotifier {
   static FlexScheme get usedScheme => FlexScheme.blueWhale;
+  // static FlexScheme get usedScheme => FlexScheme.material;
   static bool get useMaterial3 => true;
 
   ThemeMode _mode = ThemeMode.system;
@@ -58,6 +59,16 @@ class AppTheme extends ChangeNotifier {
       // We use the nicer Material 3 Typography in both M2 and M3 mode.
       typography: Typography.material2021(platform: defaultTargetPlatform),
     ).copyWith(
+      textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Roboto'),
+      colorScheme:
+          FlexThemeData.light(
+            scheme: usedScheme,
+            surfaceMode: FlexSurfaceMode.level,
+            blendLevel: 7,
+            useMaterial3: useMaterial3,
+          ).colorScheme.copyWith(
+            surface: const Color(0xFFF2F3F8), // New surface color
+          ),
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),
@@ -90,6 +101,17 @@ class AppTheme extends ChangeNotifier {
       // We use the nicer Material 3 Typography in both M2 and M3 mode.
       typography: Typography.material2021(platform: defaultTargetPlatform),
     ).copyWith(
+      textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'Roboto'),
+      colorScheme:
+          FlexThemeData.dark(
+            scheme: usedScheme,
+            surfaceMode: FlexSurfaceMode.level,
+            blendLevel: 7,
+            useMaterial3: useMaterial3,
+          ).colorScheme.copyWith(
+            // surface: const Color(0xFFF2F3F8), // New surface color
+            surface: const Color(0xD9DADF), // New surface color
+          ),
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12.0)),

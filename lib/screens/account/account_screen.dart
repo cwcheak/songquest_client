@@ -8,12 +8,12 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             title: const Text('My Account'),
-            backgroundColor: Colors.white,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             pinned: true,
             elevation: 0,
             centerTitle: true,
@@ -22,7 +22,7 @@ class AccountScreen extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(
                   12,
                 ), // Adjust the radius as needed
@@ -41,9 +41,10 @@ class AccountScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16.0, top: 24, bottom: 8),
               child: Text(
                 'Explore',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
           ),
@@ -51,7 +52,7 @@ class AccountScreen extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.only(left: 16.0, right: 16.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(
                   12,
                 ), // Adjust the radius as needed
@@ -75,9 +76,9 @@ class AccountScreen extends StatelessWidget {
                   _buildListItem(
                     context,
                     Icons.people,
-                    'My Band',
+                    'My Bands',
                     'Manage your bands',
-                    null,
+                    () => context.push('/my-bands'),
                   ),
                 ],
               ),
@@ -88,9 +89,10 @@ class AccountScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16.0, top: 24, bottom: 8),
               child: Text(
                 'Others',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
           ),
@@ -98,7 +100,7 @@ class AccountScreen extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.only(left: 16.0, right: 16.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(
                   12,
                 ), // Adjust the radius as needed
@@ -139,7 +141,7 @@ class AccountScreen extends StatelessWidget {
             child: Container(
               margin: const EdgeInsets.only(left: 16.0, right: 16.0),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: BorderRadius.circular(
                   12,
                 ), // Adjust the radius as needed
@@ -156,31 +158,147 @@ class AccountScreen extends StatelessWidget {
   Widget _buildUserInfoHeader(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 30,
-            // Placeholder for user avatar
-            backgroundColor: Colors.grey,
-            child: Icon(Icons.person, size: 40, color: Colors.white),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 8, bottom: 16),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  // Placeholder for user avatar
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Chan Julius',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '0164570087',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                QrImageView(
+                  data: '0164570087',
+                  version: QrVersions.auto,
+                  size: 60.0,
+                ),
+              ],
+            ),
           ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Chan Julius',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                '0164570087',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-            ],
+          Container(
+            height: 2,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
           ),
-          const Spacer(),
-          QrImageView(data: '0164570087', version: QrVersions.auto, size: 60.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            child: Row(
+              spacing: 8,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '185',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(
+                          'Songs Performed',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '\$200',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(
+                          'Tipping',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.2,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '185 cm',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(
+                          'Height',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: -0.2,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -213,20 +331,35 @@ class AccountScreen extends StatelessWidget {
     VoidCallback? onTap,
   ) {
     return ListTile(
-      leading: Icon(icon, color: Colors.red),
+      leading: Icon(icon, color: Theme.of(context).primaryColor),
       title: Text(title),
       subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-      trailing: const Icon(Icons.chevron_right),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: Theme.of(context).primaryColor,
+      ),
       onTap: onTap,
     );
   }
 
   Widget _buildDeleteAccountSection(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.delete_outline, color: Colors.red),
-      title: const Text('Delete Account', style: TextStyle(color: Colors.red)),
-      subtitle: const Text('Permanently delete your account'),
-      trailing: const Icon(Icons.chevron_right, color: Colors.red),
+      leading: Icon(
+        Icons.delete_outline,
+        color: Theme.of(context).colorScheme.error,
+      ),
+      title: Text(
+        'Delete Account',
+        style: TextStyle(color: Theme.of(context).colorScheme.error),
+      ),
+      subtitle: Text(
+        'Permanently delete your account',
+        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+      ),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: Theme.of(context).colorScheme.error,
+      ),
       onTap: () {
         // TODO: Handle delete account
       },
@@ -243,7 +376,10 @@ class AccountScreen extends StatelessWidget {
             height: 50,
           ),
           const SizedBox(height: 8),
-          const Text('V1.1.12', style: TextStyle(color: Colors.grey)),
+          Text(
+            'V1.1.12',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+          ),
         ],
       ),
     );
@@ -258,14 +394,21 @@ Widget _buildSummaryItem(
 ) {
   return Column(
     children: [
-      Icon(icon, color: Colors.red, size: 28),
+      Icon(icon, color: Theme.of(context).primaryColor, size: 28),
       const SizedBox(height: 4),
       Text(
         value,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: Theme.of(
+          context,
+        ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
       ),
       const SizedBox(height: 2),
-      Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      Text(
+        label,
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Theme.of(context).colorScheme.secondary,
+        ),
+      ),
     ],
   );
 }
