@@ -9,7 +9,7 @@ class AuthenticationRepository {
   final firebase_auth.FirebaseAuth _firebaseAuth;
 
   Stream<firebase_auth.User?> get user => _firebaseAuth.authStateChanges();
-  
+
   firebase_auth.User? get currentUser => _firebaseAuth.currentUser;
 
   Future<firebase_auth.UserCredential> signInWithEmailAndPassword({
@@ -17,15 +17,9 @@ class AuthenticationRepository {
     required String password,
   }) async {
     try {
-      return await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      return await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw firebase_auth.FirebaseAuthException(
-        code: e.code,
-        message: e.message,
-      );
+      throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     }
   }
 
@@ -35,10 +29,7 @@ class AuthenticationRepository {
   }) async {
     try {
       // Create user account
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
       // Send email verification
       await userCredential.user?.sendEmailVerification();
@@ -48,10 +39,7 @@ class AuthenticationRepository {
 
       return userCredential;
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw firebase_auth.FirebaseAuthException(
-        code: e.code,
-        message: e.message,
-      );
+      throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     }
   }
 
@@ -99,10 +87,7 @@ class AuthenticationRepository {
     try {
       await _firebaseAuth.signOut();
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw firebase_auth.FirebaseAuthException(
-        code: e.code,
-        message: e.message,
-      );
+      throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     }
   }
 
@@ -110,10 +95,7 @@ class AuthenticationRepository {
     try {
       await _firebaseAuth.sendPasswordResetEmail(email: email);
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw firebase_auth.FirebaseAuthException(
-        code: e.code,
-        message: e.message,
-      );
+      throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     }
   }
 
@@ -121,10 +103,7 @@ class AuthenticationRepository {
     try {
       await _firebaseAuth.currentUser?.sendEmailVerification();
     } on firebase_auth.FirebaseAuthException catch (e) {
-      throw firebase_auth.FirebaseAuthException(
-        code: e.code,
-        message: e.message,
-      );
+      throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     }
   }
 }

@@ -8,80 +8,30 @@ class AccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      // backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            title: const Text('My Account'),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            pinned: true,
-            elevation: 0,
-            centerTitle: true,
-          ),
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(
-                  12,
-                ), // Adjust the radius as needed
-              ),
-              child: Column(
-                children: [
-                  _buildUserInfoHeader(context),
-                  // const Divider(height: 1),
-                  // _buildSummarySection(context),
-                ],
-              ),
-            ),
-          ),
+          SliverAppBar(title: const Text('My Account'), pinned: true, elevation: 3, centerTitle: true),
+          SliverToBoxAdapter(child: _buildCard(context, [_buildUserInfoHeader(context)].toList())),
           SliverToBoxAdapter(
             child: Container(
               padding: const EdgeInsets.only(left: 16.0, top: 24, bottom: 8),
               child: Text(
-                'Explore',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
+                'Settings',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 0.5),
               ),
             ),
           ),
           SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(
-                  12,
-                ), // Adjust the radius as needed
-              ),
-              child: Column(
-                children: [
-                  _buildListItem(
-                    context,
-                    Icons.card_membership,
-                    'Song Request History',
-                    'View your song request history',
-                    null,
-                  ),
-                  _buildListItem(
-                    context,
-                    Icons.calendar_today,
-                    'My Playlist',
-                    'Manage your preferred playlist',
-                    () => context.push('/my-playlist'),
-                  ),
-                  _buildListItem(
-                    context,
-                    Icons.people,
-                    'My Bands',
-                    'Manage your bands',
-                    () => context.push('/my-bands'),
-                  ),
-                ],
-              ),
+            child: _buildCard(
+              context,
+              [
+                _buildListItem(context, Icons.card_membership, 'Song Request History', '', null),
+                _buildListItem(context, Icons.calendar_today, 'My Playlist', '', () => context.push('/my-playlist')),
+                _buildListItem(context, Icons.people, 'My Bands', '', () => context.push('/my-bands')),
+              ].toList(),
             ),
           ),
           SliverToBoxAdapter(
@@ -89,51 +39,24 @@ class AccountScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16.0, top: 24, bottom: 8),
               child: Text(
                 'Others',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 0.5),
               ),
             ),
           ),
           SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(
-                  12,
-                ), // Adjust the radius as needed
-              ),
-              child: Column(
-                children: [
-                  _buildListItem(context, Icons.help_outline, 'FAQ', '', null),
-                  _buildListItem(context, Icons.phone, 'Contact Us', '', null),
-                  _buildListItem(context, Icons.feedback, 'Feedback', '', null),
-                  _buildListItem(
-                    context,
-                    Icons.star_outline,
-                    'Rate Us',
-                    '',
-                    null,
-                  ),
-                  _buildListItem(
-                    context,
-                    Icons.privacy_tip_outlined,
-                    'Privacy Policy',
-                    '',
-                    null,
-                  ),
-                  _buildListItem(
-                    context,
-                    Icons.description_outlined,
-                    'Terms and Conditions',
-                    '',
-                    null,
-                  ),
-                  _buildListItem(context, Icons.logout, 'Logout', '', null),
-                ],
-              ),
+            child: _buildCard(
+              context,
+              [
+                _buildListItem(context, Icons.help_outline, 'FAQ', '', null),
+                _buildListItem(context, Icons.phone, 'Contact Us', '', null),
+                _buildListItem(context, Icons.feedback, 'Feedback', '', null),
+                _buildListItem(context, Icons.star_outline, 'Rate Us', '', null),
+                _buildListItem(context, Icons.privacy_tip_outlined, 'Privacy Policy', '', null),
+                _buildListItem(context, Icons.description_outlined, 'Terms and Conditions', '', null),
+                _buildListItem(context, Icons.logout, 'Logout', '', null),
+              ].toList(),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
@@ -142,9 +65,7 @@ class AccountScreen extends StatelessWidget {
               margin: const EdgeInsets.only(left: 16.0, right: 16.0),
               decoration: BoxDecoration(
                 color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(
-                  12,
-                ), // Adjust the radius as needed
+                borderRadius: BorderRadius.circular(12), // Adjust the radius as needed
               ),
               child: _buildDeleteAccountSection(context),
             ),
@@ -168,35 +89,24 @@ class AccountScreen extends StatelessWidget {
                   radius: 30,
                   // Placeholder for user avatar
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  child: Icon(
-                    Icons.person,
-                    size: 40,
-                    color: Theme.of(context).colorScheme.onSecondary,
-                  ),
+                  child: Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.onSecondary),
                 ),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Chan Julius',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    Text('Chan Julius', style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(height: 4),
                     Text(
                       '0164570087',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
                     ),
                   ],
                 ),
                 const Spacer(),
-                QrImageView(
-                  data: '0164570087',
-                  version: QrVersions.auto,
-                  size: 60.0,
-                ),
+                QrImageView(data: '0164570087', version: QrVersions.auto, size: 60.0),
               ],
             ),
           ),
@@ -220,21 +130,18 @@ class AccountScreen extends StatelessWidget {
                       Text(
                         '185',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.2,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'Songs Performed',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: -0.2,
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.2),
                         ),
                       ),
                     ],
@@ -248,21 +155,18 @@ class AccountScreen extends StatelessWidget {
                       Text(
                         '\$200',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.2,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'Tipping',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: -0.2,
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.2),
                         ),
                       ),
                     ],
@@ -276,21 +180,18 @@ class AccountScreen extends StatelessWidget {
                       Text(
                         '185 cm',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.2,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'Height',
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.labelSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                letterSpacing: -0.2,
-                              ),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
                         ),
                       ),
                     ],
@@ -310,12 +211,7 @@ class AccountScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _buildSummaryItem(
-            context,
-            Icons.account_balance_wallet,
-            'RM 0.00',
-            'Credit',
-          ),
+          _buildSummaryItem(context, Icons.account_balance_wallet, 'RM 0.00', 'Credit'),
           _buildSummaryItem(context, Icons.star, '456', 'Points'),
           _buildSummaryItem(context, Icons.card_giftcard, '2', 'Vouchers'),
         ],
@@ -323,43 +219,37 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(
-    BuildContext context,
-    IconData icon,
-    String title,
-    String subtitle,
-    VoidCallback? onTap,
-  ) {
+  Widget _buildCard(BuildContext context, List<Widget> items) {
+    return Container(
+      margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+      decoration: BoxDecoration(
+        // color: Theme.of(context).colorScheme.surface,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12), // Adjust the radius as needed
+      ),
+      child: Column(children: items.toList()),
+    );
+  }
+
+  Widget _buildListItem(BuildContext context, IconData icon, String title, String subtitle, VoidCallback? onTap) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).primaryColor),
       title: Text(title),
       subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-      trailing: Icon(
-        Icons.chevron_right,
-        color: Theme.of(context).primaryColor,
-      ),
+      trailing: Icon(Icons.chevron_right, color: Theme.of(context).primaryColor),
       onTap: onTap,
     );
   }
 
   Widget _buildDeleteAccountSection(BuildContext context) {
     return ListTile(
-      leading: Icon(
-        Icons.delete_outline,
-        color: Theme.of(context).colorScheme.error,
-      ),
-      title: Text(
-        'Delete Account',
-        style: TextStyle(color: Theme.of(context).colorScheme.error),
-      ),
+      leading: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+      title: Text('Delete Account', style: TextStyle(color: Theme.of(context).colorScheme.error)),
       subtitle: Text(
         'Permanently delete your account',
         style: TextStyle(color: Theme.of(context).colorScheme.secondary),
       ),
-      trailing: Icon(
-        Icons.chevron_right,
-        color: Theme.of(context).colorScheme.error,
-      ),
+      trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.error),
       onTap: () {
         // TODO: Handle delete account
       },
@@ -376,38 +266,23 @@ class AccountScreen extends StatelessWidget {
             height: 50,
           ),
           const SizedBox(height: 8),
-          Text(
-            'V1.1.12',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-          ),
+          Text('V1.1.12', style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
         ],
       ),
     );
   }
 }
 
-Widget _buildSummaryItem(
-  BuildContext context,
-  IconData icon,
-  String value,
-  String label,
-) {
+Widget _buildSummaryItem(BuildContext context, IconData icon, String value, String label) {
   return Column(
     children: [
       Icon(icon, color: Theme.of(context).primaryColor, size: 28),
       const SizedBox(height: 4),
-      Text(
-        value,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
-      ),
+      Text(value, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
       const SizedBox(height: 2),
       Text(
         label,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
       ),
     ],
   );

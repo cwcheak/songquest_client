@@ -32,22 +32,10 @@ class ScaffoldHomePage extends StatelessWidget {
         selectedIndex: _calculateSelectedIndex(context),
         destinations: const [
           NavigationDestination(label: 'Home', icon: Icon(Icons.home_outlined)),
-          NavigationDestination(
-            label: 'Order',
-            icon: Icon(Icons.receipt_long_outlined),
-          ),
-          NavigationDestination(
-            label: 'Menu',
-            icon: Icon(Icons.menu_book_outlined),
-          ),
-          NavigationDestination(
-            label: 'Rewards',
-            icon: Icon(Icons.card_giftcard_outlined),
-          ),
-          NavigationDestination(
-            label: 'Account',
-            icon: Icon(Icons.person_outline),
-          ),
+          NavigationDestination(label: 'Order', icon: Icon(Icons.receipt_long_outlined)),
+          NavigationDestination(label: 'Menu', icon: Icon(Icons.menu_book_outlined)),
+          NavigationDestination(label: 'Rewards', icon: Icon(Icons.card_giftcard_outlined)),
+          NavigationDestination(label: 'Account', icon: Icon(Icons.person_outline)),
         ],
         onDestinationSelected: onDestinationSelected,
       ),

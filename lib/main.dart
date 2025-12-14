@@ -33,7 +33,7 @@ void main() async {
 
   // Initialize Firebase Local Emulator Suite
   // Run "firebase emulators:start" at the console
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
   // Open and load database, if need to perform version migration
   final db = await databaseFactory.openDatabase(
