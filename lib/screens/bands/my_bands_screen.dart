@@ -9,8 +9,7 @@ class MyBandsScreen extends StatefulWidget {
   State<MyBandsScreen> createState() => _MyBandsScreenState();
 }
 
-class _MyBandsScreenState extends State<MyBandsScreen>
-    with SingleTickerProviderStateMixin {
+class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _showDummyData = false;
 
@@ -31,6 +30,7 @@ class _MyBandsScreenState extends State<MyBandsScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Bands'),
+        centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -115,10 +115,7 @@ class _MyBandsScreenState extends State<MyBandsScreen>
           title: Text(memberBands[index]),
           trailing: const Icon(Icons.chevron_right),
           onTap: () {
-            context.push(
-              '/band-details',
-              extra: {'bandName': memberBands[index]},
-            );
+            context.push('/band-details', extra: {'bandName': memberBands[index]});
           },
         );
       },
@@ -143,9 +140,7 @@ class _MyBandsScreenState extends State<MyBandsScreen>
                     decoration: InputDecoration(
                       labelText: 'Band Name',
                       hintText: 'Enter band name',
-                      errorText: showError
-                          ? 'Please enter a valid band name'
-                          : null,
+                      errorText: showError ? 'Please enter a valid band name' : null,
                     ),
                     onChanged: (value) {
                       bandName = value;
@@ -174,10 +169,7 @@ class _MyBandsScreenState extends State<MyBandsScreen>
                       return;
                     }
                     Navigator.pop(context);
-                    context.push(
-                      '/add-members',
-                      extra: {'bandName': bandName.trim()},
-                    );
+                    context.push('/add-members', extra: {'bandName': bandName.trim()});
                   },
                   child: const Text('Create'),
                 ),

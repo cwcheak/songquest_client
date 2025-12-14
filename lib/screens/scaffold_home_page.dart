@@ -13,10 +13,9 @@ class ScaffoldHomePage extends StatelessWidget {
     final location = GoRouterState.of(context).matchedLocation;
     // Map shell branches to tab indices:
     if (location.startsWith('/home')) return 0;
-    if (location.startsWith('/order')) return 1;
+    if (location.startsWith('/my-bands')) return 1;
     if (location.startsWith('/menu')) return 2;
-    if (location.startsWith('/rewards')) return 3;
-    if (location.startsWith('/settings')) return 4;
+    if (location.startsWith('/settings')) return 3;
     return 0;
   }
 
@@ -28,16 +27,36 @@ class ScaffoldHomePage extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _calculateSelectedIndex(context),
-        destinations: const [
-          NavigationDestination(label: 'Home', icon: Icon(Icons.home_outlined)),
-          NavigationDestination(label: 'Order', icon: Icon(Icons.receipt_long_outlined)),
-          NavigationDestination(label: 'Menu', icon: Icon(Icons.menu_book_outlined)),
-          NavigationDestination(label: 'Rewards', icon: Icon(Icons.card_giftcard_outlined)),
-          NavigationDestination(label: 'Account', icon: Icon(Icons.person_outline)),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _calculateSelectedIndex(context),
+        onTap: onDestinationSelected,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_outlined),
+            activeIcon: Icon(Icons.receipt_long),
+            label: 'My Bands',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_outlined),
+            activeIcon: Icon(Icons.menu_book),
+            label: 'Menu',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Account',
+          ),
         ],
-        onDestinationSelected: onDestinationSelected,
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+        backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }

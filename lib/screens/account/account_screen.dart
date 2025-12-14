@@ -11,7 +11,12 @@ class AccountScreen extends StatelessWidget {
       // backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(title: const Text('My Account'), pinned: true, elevation: 3, centerTitle: true),
+          SliverAppBar(
+            title: const Text('My Account'),
+            pinned: true,
+            elevation: 3,
+            centerTitle: true,
+          ),
           SliverToBoxAdapter(child: _buildCard(context, [_buildUserInfoHeader(context)].toList())),
           SliverToBoxAdapter(
             child: Container(
@@ -29,8 +34,14 @@ class AccountScreen extends StatelessWidget {
               context,
               [
                 _buildListItem(context, Icons.card_membership, 'Song Request History', '', null),
-                _buildListItem(context, Icons.calendar_today, 'My Playlist', '', () => context.push('/my-playlist')),
-                _buildListItem(context, Icons.people, 'My Bands', '', () => context.push('/my-bands')),
+                _buildListItem(
+                  context,
+                  Icons.calendar_today,
+                  'My Playlist',
+                  '',
+                  () => context.push('/my-playlist'),
+                ),
+                // _buildListItem(context, Icons.people, 'My Bands', '', () => context.push('/my-bands')),
               ].toList(),
             ),
           ),
@@ -54,7 +65,13 @@ class AccountScreen extends StatelessWidget {
                 _buildListItem(context, Icons.feedback, 'Feedback', '', null),
                 _buildListItem(context, Icons.star_outline, 'Rate Us', '', null),
                 _buildListItem(context, Icons.privacy_tip_outlined, 'Privacy Policy', '', null),
-                _buildListItem(context, Icons.description_outlined, 'Terms and Conditions', '', null),
+                _buildListItem(
+                  context,
+                  Icons.description_outlined,
+                  'Terms and Conditions',
+                  '',
+                  null,
+                ),
                 _buildListItem(context, Icons.logout, 'Logout', '', null),
               ].toList(),
             ),
@@ -89,7 +106,11 @@ class AccountScreen extends StatelessWidget {
                   radius: 30,
                   // Placeholder for user avatar
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  child: Icon(Icons.person, size: 40, color: Theme.of(context).colorScheme.onSecondary),
+                  child: Icon(
+                    Icons.person,
+                    size: 40,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -99,9 +120,9 @@ class AccountScreen extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       '0164570087',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                     ),
                   ],
                 ),
@@ -130,18 +151,20 @@ class AccountScreen extends StatelessWidget {
                       Text(
                         '185',
                         textAlign: TextAlign.center,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'Songs Performed',
                           textAlign: TextAlign.center,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.2),
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.2,
+                          ),
                         ),
                       ),
                     ],
@@ -155,18 +178,20 @@ class AccountScreen extends StatelessWidget {
                       Text(
                         '\$200',
                         textAlign: TextAlign.center,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'Tipping',
                           textAlign: TextAlign.center,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600, letterSpacing: -0.2),
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.2,
+                          ),
                         ),
                       ),
                     ],
@@ -180,18 +205,20 @@ class AccountScreen extends StatelessWidget {
                       Text(
                         '185 cm',
                         textAlign: TextAlign.center,
-                        style: Theme.of(
-                          context,
-                        ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.2,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 6),
                         child: Text(
                           'Height',
                           textAlign: TextAlign.center,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w500, letterSpacing: -0.2),
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: -0.2,
+                          ),
                         ),
                       ),
                     ],
@@ -231,7 +258,13 @@ class AccountScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListItem(BuildContext context, IconData icon, String title, String subtitle, VoidCallback? onTap) {
+  Widget _buildListItem(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback? onTap,
+  ) {
     return ListTile(
       leading: Icon(icon, color: Theme.of(context).primaryColor),
       title: Text(title),
@@ -278,11 +311,16 @@ Widget _buildSummaryItem(BuildContext context, IconData icon, String value, Stri
     children: [
       Icon(icon, color: Theme.of(context).primaryColor, size: 28),
       const SizedBox(height: 4),
-      Text(value, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)),
+      Text(
+        value,
+        style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+      ),
       const SizedBox(height: 2),
       Text(
         label,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
       ),
     ],
   );

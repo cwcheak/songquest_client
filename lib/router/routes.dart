@@ -26,21 +26,11 @@ class Routes {
   /// The base path of the app
   static const base = '/';
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
-  static final _homeNavigatorKey = GlobalKey<NavigatorState>(
-    debugLabel: 'home',
-  );
-  static final _orderNavigatorKey = GlobalKey<NavigatorState>(
-    debugLabel: 'order',
-  );
-  static final _menuNavigatorKey = GlobalKey<NavigatorState>(
-    debugLabel: 'menu',
-  );
-  static final _rewardsNavigatorKey = GlobalKey<NavigatorState>(
-    debugLabel: 'rewards',
-  );
-  static final _moreNavigatorKey = GlobalKey<NavigatorState>(
-    debugLabel: 'more',
-  );
+  static final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
+  static final _orderNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'order');
+  static final _menuNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'menu');
+  static final _rewardsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'rewards');
+  static final _moreNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'more');
 
   /// Singleton
   static final Routes _instance = Routes._internal();
@@ -75,8 +65,7 @@ class Routes {
         final isAuthenticated = authState is AuthAuthenticated;
         final isLoginRoute = state.matchedLocation == '/login';
         final isRegisterRoute = state.matchedLocation == '/register';
-        final isForgotPasswordRoute =
-            state.matchedLocation == '/forgot-password';
+        final isForgotPasswordRoute = state.matchedLocation == '/forgot-password';
         final isConfirmationRoute = state.matchedLocation == '/confirmation';
 
         Logger.instance.d('Redirecting to ${state.uri.path}');
@@ -87,8 +76,7 @@ class Routes {
         }
 
         // Allow access to register, forgot password, or confirmation routes for unauthenticated users
-        if (!isAuthenticated &&
-            (isRegisterRoute || isForgotPasswordRoute || isConfirmationRoute)) {
+        if (!isAuthenticated && (isRegisterRoute || isForgotPasswordRoute || isConfirmationRoute)) {
           return null;
         }
 
@@ -108,27 +96,23 @@ class Routes {
       routes: [
         GoRoute(
           path: '/',
-          pageBuilder: (context, state) => transitionResolver(
-            const Scaffold(body: Center(child: CircularProgressIndicator())),
-          ),
+          pageBuilder: (context, state) =>
+              transitionResolver(const Scaffold(body: Center(child: CircularProgressIndicator()))),
         ),
         GoRoute(
           path: '/login',
           name: 'Login',
-          pageBuilder: (context, state) =>
-              transitionResolver(const LoginScreen()),
+          pageBuilder: (context, state) => transitionResolver(const LoginScreen()),
         ),
         GoRoute(
           path: '/register',
           name: 'Register',
-          pageBuilder: (context, state) =>
-              transitionResolver(const RegisterScreen()),
+          pageBuilder: (context, state) => transitionResolver(const RegisterScreen()),
         ),
         GoRoute(
           path: '/forgot-password',
           name: 'Forgot Password',
-          pageBuilder: (context, state) =>
-              transitionResolver(const ForgotPasswordScreen()),
+          pageBuilder: (context, state) => transitionResolver(const ForgotPasswordScreen()),
         ),
         GoRoute(
           path: '/confirmation',
@@ -142,32 +126,27 @@ class Routes {
         GoRoute(
           path: '/my-playlist',
           name: 'My Playlist',
-          pageBuilder: (context, state) =>
-              transitionResolver(const MyPlaylistScreen()),
+          pageBuilder: (context, state) => transitionResolver(const MyPlaylistScreen()),
         ),
         GoRoute(
           path: '/playlist-items',
           name: 'Playlist Items',
-          pageBuilder: (context, state) =>
-              transitionResolver(const PlaylistItemsScreen()),
+          pageBuilder: (context, state) => transitionResolver(const PlaylistItemsScreen()),
         ),
         GoRoute(
           path: '/add-song',
           name: 'Add Song',
-          pageBuilder: (context, state) =>
-              transitionResolver(const AddSongScreen()),
+          pageBuilder: (context, state) => transitionResolver(const AddSongScreen()),
         ),
-        GoRoute(
-          path: '/my-bands',
-          name: 'My Bands',
-          pageBuilder: (context, state) =>
-              transitionResolver(const MyBandsScreen()),
-        ),
+        // GoRoute(
+        //   path: '/my-bands',
+        //   name: 'My Bands',
+        //   pageBuilder: (context, state) => transitionResolver(const MyBandsScreen()),
+        // ),
         GoRoute(
           path: '/scan-band-qr',
           name: 'Scan Band QR',
-          pageBuilder: (context, state) =>
-              transitionResolver(const ScanBandQrScreen()),
+          pageBuilder: (context, state) => transitionResolver(const ScanBandQrScreen()),
         ),
         GoRoute(
           path: '/add-members',
@@ -194,8 +173,7 @@ class Routes {
         //       transitionResolver(const AccountCreationScreen()),
         // ),
         StatefulShellRoute.indexedStack(
-          builder: (context, state, shell) =>
-              ScaffoldHomePage(navigationShell: shell),
+          builder: (context, state, shell) => ScaffoldHomePage(navigationShell: shell),
           branches: [
             StatefulShellBranch(
               navigatorKey: _homeNavigatorKey,
@@ -203,8 +181,7 @@ class Routes {
                 GoRoute(
                   path: '/home',
                   name: 'Home',
-                  pageBuilder: (context, state) =>
-                      transitionResolver(const HomePage()),
+                  pageBuilder: (context, state) => transitionResolver(const HomePage()),
                 ),
               ],
             ),
@@ -212,10 +189,11 @@ class Routes {
               navigatorKey: _orderNavigatorKey,
               routes: [
                 GoRoute(
-                  path: '/order',
-                  name: 'Order',
+                  path: '/my-bands',
+                  name: 'My Bands',
                   pageBuilder: (context, state) => transitionResolver(
-                    const Scaffold(body: Center(child: Text('Order'))),
+                    // const Scaffold(body: Center(child: Text('Order'))),
+                    const MyBandsScreen(),
                   ),
                 ),
               ],
@@ -226,21 +204,8 @@ class Routes {
                 GoRoute(
                   path: '/menu',
                   name: 'Menu',
-                  pageBuilder: (context, state) => transitionResolver(
-                    const Scaffold(body: Center(child: Text('Menu'))),
-                  ),
-                ),
-              ],
-            ),
-            StatefulShellBranch(
-              navigatorKey: _rewardsNavigatorKey,
-              routes: [
-                GoRoute(
-                  path: '/rewards',
-                  name: 'Rewards',
-                  pageBuilder: (context, state) => transitionResolver(
-                    const Scaffold(body: Center(child: Text('Rewards'))),
-                  ),
+                  pageBuilder: (context, state) =>
+                      transitionResolver(const Scaffold(body: Center(child: Text('Menu')))),
                 ),
               ],
             ),
@@ -250,8 +215,7 @@ class Routes {
                 GoRoute(
                   path: '/settings',
                   name: 'More',
-                  pageBuilder: (context, state) =>
-                      transitionResolver(const AccountScreen()),
+                  pageBuilder: (context, state) => transitionResolver(const AccountScreen()),
                 ),
               ],
             ),
