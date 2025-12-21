@@ -14,29 +14,22 @@ class _PlaylistItemsScreenState extends State<PlaylistItemsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Oldies Songs (3)')),
+      appBar: AppBar(
+        title: const Text('Oldies Songs (3)'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: _isSongListEmpty
           ? const Center(child: Text('There are no songs in this playlist.'))
           : ListView(
               children: [
-                _buildSongItem(
-                  context,
-                  'assets/icons/google.png',
-                  'Kiss Goodbye',
-                  'Jacky Cheung',
-                ),
-                _buildSongItem(
-                  context,
-                  'assets/icons/google.png',
-                  'Hostage',
-                  'A-Mei',
-                ),
-                _buildSongItem(
-                  context,
-                  'assets/icons/google.png',
-                  'My Dearest',
-                  'A-Mei',
-                ),
+                _buildSongItem(context, 'assets/icons/google.png', 'Kiss Goodbye', 'Jacky Cheung'),
+                _buildSongItem(context, 'assets/icons/google.png', 'Hostage', 'A-Mei'),
+                _buildSongItem(context, 'assets/icons/google.png', 'My Dearest', 'A-Mei'),
               ],
             ),
       bottomNavigationBar: Padding(
@@ -56,12 +49,7 @@ class _PlaylistItemsScreenState extends State<PlaylistItemsScreen> {
   }
 }
 
-Widget _buildSongItem(
-  BuildContext context,
-  String imagePath,
-  String title,
-  String artist,
-) {
+Widget _buildSongItem(BuildContext context, String imagePath, String title, String artist) {
   return ListTile(
     leading: CircleAvatar(backgroundImage: AssetImage(imagePath)),
     title: Text(title),

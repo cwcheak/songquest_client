@@ -15,19 +15,23 @@ class BandDetailsScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: Text("Band Details"), centerTitle: true),
+      appBar: AppBar(
+        title: Text("Band Details"),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  bandName,
-                  style: Theme.of(context).textTheme.headlineSmall,
-                ),
-              ],
+              children: [Text(bandName, style: Theme.of(context).textTheme.headlineSmall)],
             ),
           ),
           const Divider(),
@@ -55,9 +59,7 @@ class BandDetailsScreen extends StatelessWidget {
                       color: member['role'] == 'Lead'
                           ? Theme.of(context).primaryColor
                           : Colors.grey,
-                      fontWeight: member['role'] == 'Lead'
-                          ? FontWeight.bold
-                          : FontWeight.normal,
+                      fontWeight: member['role'] == 'Lead' ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                   trailing: member['role'] == 'Lead'
@@ -93,9 +95,7 @@ class BandDetailsScreen extends StatelessWidget {
       builder: (context) {
         return AlertDialog(
           title: const Text('Quit Band'),
-          content: const Text(
-            'Are you sure you want to request to quit this band?',
-          ),
+          content: const Text('Are you sure you want to request to quit this band?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -107,9 +107,9 @@ class BandDetailsScreen extends StatelessWidget {
               onPressed: () {
                 // TODO: Handle quit request
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Quit request submitted')),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(const SnackBar(content: Text('Quit request submitted')));
               },
               child: const Text('Confirm'),
             ),

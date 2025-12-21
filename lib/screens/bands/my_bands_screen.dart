@@ -31,6 +31,12 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
       appBar: AppBar(
         title: const Text('My Bands'),
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -60,7 +66,7 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
             const Text('You are not leading any bands yet.'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => _showCreateBandDialog(context),
+              onPressed: () => _showCreateBandBottomSheet(context),
               child: const Text('Create New Band'),
             ),
           ],
@@ -122,28 +128,61 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
     );
   }
 
-  void _showCreateBandDialog(BuildContext context) {
-    String bandName = '';
+  void _showCreateBandBottomSheet(BuildContext context) {
+    final TextEditingController _nameController = TextEditingController();
     bool showError = false;
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) {
-            return AlertDialog(
-              title: const Text('Create New Band'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
+            return Container(
+              height: MediaQuery.of(context).size.height / 4 + 40,
+              padding: const EdgeInsets.all(15),
+              child: Column(
                 children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Create New Band",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
                   TextField(
+                    controller: _nameController,
+                    maxLength: 30,
+                    autofocus: true,
+                    cursorColor: Theme.of(context).primaryColor,
                     decoration: InputDecoration(
-                      labelText: 'Band Name',
-                      hintText: 'Enter band name',
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
+                      ),
+                      labelText: "Band Name (Required, max 30 characters)",
+                      labelStyle: const TextStyle(color: Colors.grey),
                       errorText: showError ? 'Please enter a valid band name' : null,
                     ),
                     onChanged: (value) {
-                      bandName = value;
                       if (showError) {
                         setState(() {
                           showError = false;
@@ -151,29 +190,26 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
                       }
                     },
                   ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () {
+                        final bandName = _nameController.text.trim();
+                        if (bandName.isEmpty) {
+                          setState(() {
+                            showError = true;
+                          });
+                          return;
+                        }
+                        Navigator.of(context).pop();
+                        context.push('/add-members', extra: {'bandName': bandName});
+                      },
+                      child: const Text("Create"),
+                    ),
+                  ),
                 ],
               ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (bandName.trim().isEmpty) {
-                      setState(() {
-                        showError = true;
-                      });
-                      return;
-                    }
-                    Navigator.pop(context);
-                    context.push('/add-members', extra: {'bandName': bandName.trim()});
-                  },
-                  child: const Text('Create'),
-                ),
-              ],
             );
           },
         );

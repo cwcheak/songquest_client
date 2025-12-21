@@ -11,7 +11,15 @@ class DebugScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Debug')),
+      appBar: AppBar(
+        title: Text('Debug'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Center(
         child: BlocConsumer<AuthBloc, AuthState>(
           listener: (context, state) {
@@ -27,10 +35,7 @@ class DebugScreen extends StatelessWidget {
                 },
                 child: const Text('Logout'),
               ),
-              TextButton(
-                onPressed: () => testSentry(),
-                child: const Text("Throw Test Exception"),
-              ),
+              TextButton(onPressed: () => testSentry(), child: const Text("Throw Test Exception")),
             ],
           ),
         ),

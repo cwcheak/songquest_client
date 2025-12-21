@@ -96,13 +96,19 @@ class AppTheme extends ChangeNotifier {
         brightness: Brightness.light,
       ),
       primaryColor: primaryColor,
+      textTheme: ThemeData.light().textTheme.copyWith(
+        titleLarge: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+      ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color.fromARGB(255, 245, 245, 245),
+        // backgroundColor: Color.fromARGB(255, 245, 245, 245),
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(
+          color: Colors.black, // Back button color
+        ),
       ),
-      popupMenuTheme: const PopupMenuThemeData(
-        color: Color.fromARGB(255, 245, 245, 245),
-      ),
-      scaffoldBackgroundColor: const Color.fromARGB(255, 245, 245, 245),
+      popupMenuTheme: const PopupMenuThemeData(color: Color.fromARGB(255, 245, 245, 245)),
+      // scaffoldBackgroundColor: const Color.fromARGB(255, 245, 245, 245),
+      scaffoldBackgroundColor: Colors.transparent,
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: Colors.grey[200],
         shape: const RoundedRectangleBorder(
@@ -114,9 +120,7 @@ class AppTheme extends ChangeNotifier {
       ),
       navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: Colors.white,
-        labelTextStyle: const WidgetStatePropertyAll<TextStyle>(
-          TextStyle(fontSize: 11.0),
-        ),
+        labelTextStyle: const WidgetStatePropertyAll<TextStyle>(TextStyle(fontSize: 11.0)),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         elevation: 3,
       ),

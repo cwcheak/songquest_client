@@ -15,7 +15,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Settings')),
+      appBar: AppBar(
+        title: Text('Settings'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           displacement: 20,
@@ -120,17 +128,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       DateTime.now().year == 2025
                           ? 'Copyright © 2025'
                           : 'Copyright © 2025-${DateTime.now().year}',
-                      style: TextStyle(
-                        color: Theme.of(context).hintColor,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Theme.of(context).hintColor, fontSize: 14),
                     ),
                     Text(
                       'Terminus Digital Sdn. Bhd.',
-                      style: TextStyle(
-                        color: Theme.of(context).hintColor,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Theme.of(context).hintColor, fontSize: 14),
                     ),
                     const SizedBox(height: 15),
                   ],

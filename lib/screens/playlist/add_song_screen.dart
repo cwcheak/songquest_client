@@ -13,7 +13,15 @@ class _AddSongScreenState extends State<AddSongScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Song')),
+      appBar: AppBar(
+        title: const Text('Add Song'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Column(
         children: [
           Padding(
@@ -28,10 +36,7 @@ class _AddSongScreenState extends State<AddSongScreen> {
                 ),
                 const SizedBox(height: 16),
                 const TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Song Name',
-                    hintText: 'Enter song name',
-                  ),
+                  decoration: InputDecoration(labelText: 'Song Name', hintText: 'Enter song name'),
                 ),
               ],
             ),

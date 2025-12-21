@@ -16,6 +16,12 @@ class _MyPlaylistScreenState extends State<MyPlaylistScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Playlist'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         /*
         actions: [
           IconButton(
@@ -38,12 +44,7 @@ class _MyPlaylistScreenState extends State<MyPlaylistScreen> {
           : ListView(
               children: [
                 _buildPlaylistItem(context, 'Oldies Songs', '1 song', true),
-                _buildPlaylistItem(
-                  context,
-                  'My Favourite Songs',
-                  '0 songs',
-                  false,
-                ),
+                _buildPlaylistItem(context, 'My Favourite Songs', '0 songs', false),
                 _buildPlaylistItem(context, 'Hot List', '30 songs', false),
               ],
             ),
@@ -64,12 +65,7 @@ class _MyPlaylistScreenState extends State<MyPlaylistScreen> {
   }
 }
 
-Widget _buildPlaylistItem(
-  BuildContext context,
-  String title,
-  String subtitle,
-  bool isSelected,
-) {
+Widget _buildPlaylistItem(BuildContext context, String title, String subtitle, bool isSelected) {
   return ListTile(
     leading: const Icon(Icons.music_note),
     title: Text(title),
@@ -127,9 +123,7 @@ void _showRenameDialog(BuildContext context) {
     builder: (context) {
       return AlertDialog(
         title: const Text('Rename Playlist'),
-        content: const TextField(
-          decoration: InputDecoration(hintText: 'Enter new name'),
-        ),
+        content: const TextField(decoration: InputDecoration(hintText: 'Enter new name')),
         actions: [
           TextButton(
             onPressed: () {

@@ -13,7 +13,15 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan Band QR')),
+      appBar: AppBar(
+        title: const Text('Scan Band QR'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -25,9 +33,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: BorderRadius.circular(
-                    12,
-                  ), // Adjust the radius as needed
+                  borderRadius: BorderRadius.circular(12), // Adjust the radius as needed
                 ),
                 child: _buildQrScanArea(),
               ),
@@ -113,10 +119,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
           height: double.infinity,
           color: Colors.black,
           child: const Center(
-            child: Text(
-              'Camera Viewfinder',
-              style: TextStyle(color: Colors.white, fontSize: 18),
-            ),
+            child: Text('Camera Viewfinder', style: TextStyle(color: Colors.white, fontSize: 18)),
           ),
         ),
 
@@ -155,11 +158,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.green, width: 3),
           boxShadow: [
-            BoxShadow(
-              color: Colors.green.withOpacity(0.3),
-              blurRadius: 10,
-              spreadRadius: 2,
-            ),
+            BoxShadow(color: Colors.green.withOpacity(0.3), blurRadius: 10, spreadRadius: 2),
           ],
         ),
         child: Stack(
@@ -197,9 +196,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
                 height: 20,
                 decoration: const BoxDecoration(
                   color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(8),
-                  ),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8)),
                 ),
               ),
             ),
@@ -211,9 +208,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
                 height: 20,
                 decoration: const BoxDecoration(
                   color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(8),
-                  ),
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(8)),
                 ),
               ),
             ),
@@ -234,9 +229,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
           children: [
             Text(
               'How to Join a Band',
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             _buildInstructionStep(
@@ -259,10 +252,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
             const SizedBox(height: 16),
             Text(
               'Note: Make sure you have permission from the band lead before scanning their QR code.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 12,
-              ),
+              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 12),
             ),
           ],
         ),
@@ -270,11 +260,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
     );
   }
 
-  Widget _buildInstructionStep(
-    int stepNumber,
-    String title,
-    String description,
-  ) {
+  Widget _buildInstructionStep(int stepNumber, String title, String description) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -288,10 +274,7 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
           child: Center(
             child: Text(
               stepNumber.toString(),
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ),
