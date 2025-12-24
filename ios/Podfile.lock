@@ -59,6 +59,9 @@ PODS:
     - Flutter
   - package_info_plus (0.4.5):
     - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - RecaptchaInterop (101.0.0)
   - Sentry/HybridSDK (8.56.2)
   - sentry_flutter (9.8.0):
@@ -76,6 +79,7 @@ DEPENDENCIES:
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - objective_c (from `.symlinks/plugins/objective_c/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
 
@@ -106,6 +110,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/objective_c/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   sentry_flutter:
     :path: ".symlinks/plugins/sentry_flutter/ios"
   sqflite_darwin:
@@ -127,6 +133,7 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 02d6e866e90bc236f48a703a041dfe43e6221a29
   objective_c: 89e720c30d716b036faf9c9684022048eee1eee2
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 4c33648b7e83310aa1fdb1b10c5491027d9643f0

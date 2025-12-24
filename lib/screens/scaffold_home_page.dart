@@ -42,9 +42,9 @@ class ScaffoldHomePage extends StatelessWidget {
             label: 'My Bands',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_outlined),
-            activeIcon: Icon(Icons.menu_book),
-            label: 'Menu',
+            icon: Icon(Icons.music_note_outlined),
+            activeIcon: Icon(Icons.music_note),
+            label: 'Stage',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),

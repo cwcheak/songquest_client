@@ -39,6 +39,7 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
         ),
         bottom: TabBar(
           controller: _tabController,
+          // isScrollable: true,
           tabs: const [
             Tab(text: 'As Lead'),
             Tab(text: 'As Member'),
@@ -203,7 +204,7 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
                           return;
                         }
                         Navigator.of(context).pop();
-                        context.push('/add-members', extra: {'bandName': bandName});
+                        context.push('/band-members', extra: {'bandName': bandName});
                       },
                       child: const Text("Create"),
                     ),

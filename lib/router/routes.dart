@@ -9,9 +9,11 @@ import 'package:songquest/screens/auth/forgot_password_screen.dart';
 import 'package:songquest/screens/auth/confirmation_screen.dart';
 import 'package:songquest/screens/bands/add_members_screen.dart';
 import 'package:songquest/screens/bands/band_details_screen.dart';
+import 'package:songquest/screens/bands/band_members_screen.dart';
 import 'package:songquest/screens/bands/my_bands_screen.dart';
 import 'package:songquest/screens/bands/scan_band_qr_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
+import 'package:songquest/screens/on_stage/stage_dashboard_screen.dart';
 import 'package:songquest/screens/debug/debug_screen.dart';
 import 'package:songquest/screens/playlist/my_playlist_screen.dart';
 import 'package:songquest/screens/playlist/add_song_screen.dart';
@@ -149,6 +151,15 @@ class Routes {
           pageBuilder: (context, state) => transitionResolver(const ScanBandQrScreen()),
         ),
         GoRoute(
+          path: '/band-members',
+          name: 'Band Members',
+          pageBuilder: (context, state) {
+            final extra = state.extra as Map<String, dynamic>?;
+            final bandName = extra?['bandName'] as String? ?? '';
+            return transitionResolver(BandMembersScreen(bandName: bandName));
+          },
+        ),
+        GoRoute(
           path: '/add-members',
           name: 'Add Members',
           pageBuilder: (context, state) {
@@ -204,8 +215,7 @@ class Routes {
                 GoRoute(
                   path: '/menu',
                   name: 'Menu',
-                  pageBuilder: (context, state) =>
-                      transitionResolver(const Scaffold(body: Center(child: Text('Menu')))),
+                  pageBuilder: (context, state) => transitionResolver(const StageDashboardScreen()),
                 ),
               ],
             ),
