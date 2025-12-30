@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'package:songquest/helper/snackbar.dart';
+import 'package:songquest/screens/components/load_image.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -81,11 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     decoration: InputDecoration(
                       // hintText: '****************',
                       suffixIcon: IconButton(
-                        icon: Icon(
-                          _isPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                        ),
+                        icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
                         onPressed: () {
                           setState(() {
                             _isPasswordVisible = !_isPasswordVisible;
@@ -115,9 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           backgroundColor: colorScheme.primary,
                           foregroundColor: colorScheme.onPrimary,
                         ),
@@ -165,16 +160,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildSocialButton('assets/icons/facebook.png', () {
-                        context.read<AuthBloc>().add(
-                          AuthSignInWithFacebookRequested(),
-                        );
+                      _buildSocialButton('social/facebook', () {
+                        context.read<AuthBloc>().add(AuthSignInWithFacebookRequested());
                       }),
                       const SizedBox(width: 20),
-                      _buildSocialButton('assets/icons/google.png', () {
-                        context.read<AuthBloc>().add(
-                          AuthSignInWithGoogleRequested(),
-                        );
+                      _buildSocialButton('social/google', () {
+                        context.read<AuthBloc>().add(AuthSignInWithGoogleRequested());
                       }),
                       // const SizedBox(width: 20),
                       // _buildSocialButton('assets/icons/apple.png', () {
@@ -224,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16),
         side: BorderSide(color: Colors.grey.shade300),
       ),
-      child: Image.asset(assetPath, height: 24, width: 24),
+      child: LoadAssetImage(assetPath, width: 24, height: 24.0),
     );
   }
 }

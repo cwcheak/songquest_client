@@ -6,7 +6,8 @@ class AppTheme extends ChangeNotifier {
   static FlexScheme get usedScheme => FlexScheme.blueWhale;
   // static FlexScheme get usedScheme => FlexScheme.material;
   static bool get useMaterial3 => true;
-  static Color primaryColor = Colors.black;
+  // static Color primaryColor = Colors.black;
+  static Color primaryColor = Color(0xFF2A3662);
 
   ThemeMode _mode = ThemeMode.system;
   ThemeMode get mode => _mode;
@@ -97,7 +98,9 @@ class AppTheme extends ChangeNotifier {
       ),
       primaryColor: primaryColor,
       textTheme: ThemeData.light().textTheme.copyWith(
-        titleLarge: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        titleLarge: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        titleMedium: const TextStyle(fontWeight: FontWeight.w600),
+        titleSmall: const TextStyle(fontWeight: FontWeight.w600),
       ),
       appBarTheme: const AppBarTheme(
         // backgroundColor: Color.fromARGB(255, 245, 245, 245),
@@ -107,8 +110,8 @@ class AppTheme extends ChangeNotifier {
         ),
       ),
       popupMenuTheme: const PopupMenuThemeData(color: Color.fromARGB(255, 245, 245, 245)),
-      // scaffoldBackgroundColor: const Color.fromARGB(255, 245, 245, 245),
-      scaffoldBackgroundColor: Colors.transparent,
+      scaffoldBackgroundColor: const Color.fromARGB(255, 242, 242, 242),
+      // scaffoldBackgroundColor: Colors.transparent,
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: Colors.grey[200],
         shape: const RoundedRectangleBorder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:songquest/screens/components/load_image.dart';
 
 enum StageMenuItems { newStage, editStage, deleteStages }
 
@@ -34,14 +35,14 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
 
   void _preCacheImages() {
     // Pre-cache tab icons
-    precacheImage(AssetImage('assets/icons/order/new_order_active.png'), context);
-    precacheImage(AssetImage('assets/icons/order/new_order_inactive.png'), context);
-    precacheImage(AssetImage('assets/icons/order/pending_active.png'), context);
-    precacheImage(AssetImage('assets/icons/order/pending_inactive.png'), context);
-    precacheImage(AssetImage('assets/icons/order/completed_active.png'), context);
-    precacheImage(AssetImage('assets/icons/order/completed_inactive.png'), context);
-    precacheImage(AssetImage('assets/icons/order/cancelled_active.png'), context);
-    precacheImage(AssetImage('assets/icons/order/cancelled_inactive.png'), context);
+    precacheImage(AssetImage('assets/images/order/new_order_active.png'), context);
+    precacheImage(AssetImage('assets/images/order/new_order_inactive.png'), context);
+    precacheImage(AssetImage('assets/images/order/pending_active.png'), context);
+    precacheImage(AssetImage('assets/images/order/pending_inactive.png'), context);
+    precacheImage(AssetImage('assets/images/order/completed_active.png'), context);
+    precacheImage(AssetImage('assets/images/order/completed_inactive.png'), context);
+    precacheImage(AssetImage('assets/images/order/cancelled_active.png'), context);
+    precacheImage(AssetImage('assets/images/order/cancelled_inactive.png'), context);
   }
 
   @override
@@ -132,12 +133,11 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
           flexibleSpace: FlexibleSpaceBar(
             background: isDark
                 ? Container(height: 113.0, color: const Color(0xFF121212))
-                : Container(
-                    width: MediaQuery.of(context).size.width,
+                : LoadAssetImage(
+                    'order/order_bg',
+                    width: double.infinity,
                     height: 113.0,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(colors: [Color(0xFF667eea), Color(0xFF764ba2)]),
-                    ),
+                    fit: BoxFit.fill,
                   ),
             centerTitle: true,
             titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
@@ -145,9 +145,9 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
             title: Text(
               'Stage Dashboard',
               style: TextStyle(
-                color: isDark ? Colors.white : Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+                color: isDark ? Colors.black87 : Colors.white,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
               ),
             ),
           ),
@@ -167,46 +167,48 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Card(
                 elevation: 4,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
                 child: Container(
-                  height: 80.0,
-                  padding: const EdgeInsets.only(top: 8.0),
+                  height: 88.0,
+                  // padding: const EdgeInsets.only(top: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TabBar(
                     labelPadding: EdgeInsets.zero,
                     controller: _tabController,
-                    labelColor: isDark ? Colors.white : Colors.white,
-                    unselectedLabelColor: isDark ? Colors.grey[400] : Colors.white70,
-                    labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                    unselectedLabelStyle: const TextStyle(fontSize: 14),
+                    dividerHeight: 0,
+                    // labelColor: isDark ? Colors.black87 : Colors.white,
+                    // unselectedLabelColor: isDark ? Colors.grey[400] : Colors.white70,
+                    // labelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    // unselectedLabelStyle: const TextStyle(fontSize: 10),
                     indicatorColor: Colors.transparent,
                     tabs: <Widget>[
                       _StageTabView(
                         0,
-                        'New',
-                        'assets/icons/order/new_order_active.png',
-                        'assets/icons/order/new_order_inactive.png',
+                        'New  ',
+                        'order/new_order_active',
+                        'order/new_order_inactive',
                         currentIndex: _currentIndex,
                       ),
                       _StageTabView(
                         1,
-                        'Live',
-                        'assets/icons/order/pending_active.png',
-                        'assets/icons/order/pending_inactive.png',
+                        'Pending',
+                        'order/pending_active',
+                        'order/pending_inactive',
                         currentIndex: _currentIndex,
                       ),
                       _StageTabView(
                         2,
                         'Completed',
-                        'assets/icons/order/completed_active.png',
-                        'assets/icons/order/completed_inactive.png',
+                        'order/completed_active',
+                        'order/completed_inactive',
                         currentIndex: _currentIndex,
                       ),
                       _StageTabView(
                         3,
                         'Cancelled',
-                        'assets/icons/order/cancelled_active.png',
-                        'assets/icons/order/cancelled_inactive.png',
+                        'order/cancelled_active',
+                        'order/cancelled_inactive',
                         currentIndex: _currentIndex,
                       ),
                     ],
@@ -219,7 +221,7 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
               ),
             ),
           ),
-          80.0,
+          84.0,
         ),
       ),
     ];
@@ -347,16 +349,16 @@ class _StageTabView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
             children: <Widget>[
-              Image.asset(
+              LoadAssetImage(
                 currentIndex == index ? activeIcon : inactiveIcon,
-                width: 24.0,
-                height: 24.0,
+                width: 24,
+                height: 24,
                 color: isDark ? Colors.white : Colors.black87,
               ),
               const SizedBox(height: 4),
               Text(
                 text,
-                style: TextStyle(color: isDark ? Colors.white : Colors.white, fontSize: 12),
+                style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 10),
               ),
             ],
           ),
@@ -365,7 +367,7 @@ class _StageTabView extends StatelessWidget {
         Positioned(
           right: 0.0,
           top: 8.0,
-          child: index < 3
+          child: index < 4
               ? Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
