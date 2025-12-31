@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songquest/screens/components/load_image.dart';
+import 'package:songquest/helper/image_utils.dart';
+import 'package:songquest/screens/on_stage/song_order_list.dart';
 
 enum StageMenuItems { newStage, editStage, deleteStages }
 
-class StageDashboardScreen extends StatefulWidget {
-  const StageDashboardScreen({super.key});
+class SongOrderScreen extends StatefulWidget {
+  const SongOrderScreen({super.key});
 
   @override
-  _StageDashboardScreenState createState() => _StageDashboardScreenState();
+  _SongOrderScreenState createState() => _SongOrderScreenState();
 }
 
-class _StageDashboardScreenState extends State<StageDashboardScreen>
-    with AutomaticKeepAliveClientMixin<StageDashboardScreen>, SingleTickerProviderStateMixin {
+class _SongOrderScreenState extends State<SongOrderScreen>
+    with AutomaticKeepAliveClientMixin<SongOrderScreen>, SingleTickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -69,7 +71,7 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
                   ? null
                   : const DecoratedBox(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [Color(0xFF667eea), Color(0xFF764ba2)]),
+                        gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
                       ),
                     ),
             ),
@@ -97,7 +99,7 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
                 key: const Key('pageView'),
                 itemCount: 4,
                 controller: _pageController,
-                itemBuilder: (_, index) => _buildStageListPage(index),
+                itemBuilder: (_, index) => SongOrderList(tabIndex: index),
               ),
             ),
           ),
@@ -133,17 +135,26 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
           flexibleSpace: FlexibleSpaceBar(
             background: isDark
                 ? Container(height: 113.0, color: const Color(0xFF121212))
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 113.0,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
+                    ),
+                  ),
+            /*
                 : LoadAssetImage(
                     'order/order_bg',
                     width: double.infinity,
                     height: 113.0,
                     fit: BoxFit.fill,
                   ),
+                  */
             centerTitle: true,
             titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
             collapseMode: CollapseMode.pin,
             title: Text(
-              'Stage Dashboard',
+              'Ang Ang\'s Roastery',
               style: TextStyle(
                 color: isDark ? Colors.black87 : Colors.white,
                 fontWeight: FontWeight.w500,
@@ -158,15 +169,18 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
         delegate: _SliverAppBarDelegate(
           Container(
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF121212) : null,
-              gradient: isDark
+              // color: isDark ? const Color(0xFF121212) : null,
+              image: isDark
                   ? null
-                  : const LinearGradient(colors: [Color(0xFF667eea), Color(0xFF764ba2)]),
+                  : DecorationImage(
+                      image: ImageUtils.getAssetImage('order/order_bg1_modified'),
+                      fit: BoxFit.fill,
+                    ),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Card(
-                elevation: 4,
+                elevation: 3,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
                 child: Container(
@@ -221,39 +235,20 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
               ),
             ),
           ),
-          84.0,
+          86.0,
         ),
       ),
     ];
   }
 
+  /*
   Widget _buildStageListPage(int index) {
-    final stageTitles = ['New Performances', 'Live Now', 'Completed Shows', 'Cancelled Shows'];
-
-    final stageDescriptions = [
-      'Manage new stage requests and bookings',
-      'Monitor live performances in real-time',
-      'Review completed stage performances',
-      'View cancelled or postponed shows',
-    ];
-
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            stageTitles[index],
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            stageDescriptions[index],
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.7),
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 40),
           Expanded(
             child: ListView.builder(
               itemCount: 10,
@@ -281,6 +276,7 @@ class _StageDashboardScreenState extends State<StageDashboardScreen>
       ),
     );
   }
+  */
 
   void _onPageChange(int index) {
     setState(() {
@@ -341,11 +337,12 @@ class _StageTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isActive = currentIndex == index;
 
     return Stack(
       children: <Widget>[
         Container(
-          width: 60.0,
+          width: 62.0,
           padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
             children: <Widget>[
@@ -353,12 +350,21 @@ class _StageTabView extends StatelessWidget {
                 currentIndex == index ? activeIcon : inactiveIcon,
                 width: 24,
                 height: 24,
-                color: isDark ? Colors.white : Colors.black87,
+                color: currentIndex == index
+                    ? (isDark ? Colors.white : Colors.black87)
+                    : (isDark ? Colors.grey[400] : Colors.grey[600]),
               ),
               const SizedBox(height: 4),
               Text(
                 text,
-                style: TextStyle(color: isDark ? Colors.white : Colors.black87, fontSize: 10),
+                style: TextStyle(
+                  color: currentIndex == index
+                      ? (isDark ? Colors.white : Colors.black87)
+                      : (isDark ? Colors.grey[400] : Colors.grey[600]),
+                  fontSize: 10,
+                  fontWeight: currentIndex == index ? FontWeight.bold : FontWeight.normal,
+                  letterSpacing: -0.2,
+                ),
               ),
             ],
           ),
@@ -371,7 +377,9 @@ class _StageTabView extends StatelessWidget {
               ? Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    // color: Colors.red,
+                    // color: Color(0xFF6D37B0), // Softer Amethyst Purple
+                    color: Color(0xFF512889), // Deep Plum Purple
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Text(

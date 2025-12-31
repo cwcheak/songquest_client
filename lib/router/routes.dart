@@ -13,7 +13,7 @@ import 'package:songquest/screens/bands/band_members_screen.dart';
 import 'package:songquest/screens/bands/my_bands_screen.dart';
 import 'package:songquest/screens/bands/scan_band_qr_screen.dart';
 import 'package:songquest/screens/components/transition_resolver.dart';
-import 'package:songquest/screens/on_stage/stage_dashboard_screen.dart';
+import 'package:songquest/screens/on_stage/song_order_screen.dart';
 import 'package:songquest/screens/debug/debug_screen.dart';
 import 'package:songquest/screens/playlist/my_playlist_screen.dart';
 import 'package:songquest/screens/playlist/add_song_screen.dart';
@@ -215,7 +215,7 @@ class Routes {
                 GoRoute(
                   path: '/menu',
                   name: 'Menu',
-                  pageBuilder: (context, state) => transitionResolver(const StageDashboardScreen()),
+                  pageBuilder: (context, state) => transitionResolver(const SongOrderScreen()),
                 ),
               ],
             ),
