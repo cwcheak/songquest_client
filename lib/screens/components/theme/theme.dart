@@ -8,6 +8,7 @@ class AppTheme extends ChangeNotifier {
   static bool get useMaterial3 => true;
   // static Color primaryColor = Colors.black;
   static Color primaryColor = Color(0xFF2A3662);
+  static Color accentColor = Color(0xFF512889); // Deep Plum Purple
 
   ThemeMode _mode = ThemeMode.system;
   ThemeMode get mode => _mode;
@@ -94,6 +95,7 @@ class AppTheme extends ChangeNotifier {
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.white,
         primary: primaryColor,
+        secondary: accentColor,
         brightness: Brightness.light,
       ),
       primaryColor: primaryColor,
