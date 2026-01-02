@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songquest/screens/components/load_image.dart';
+import './components/my_flexible_space_bar.dart';
 import 'package:songquest/helper/image_utils.dart';
 import 'package:songquest/screens/on_stage/song_order_list.dart';
 import 'package:songquest/bloc/on_stage_bloc.dart';
@@ -23,7 +24,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
   bool get wantKeepAlive => true;
 
   late TabController _tabController;
-  late PageController _pageController;
+  final PageController _pageController = PageController();
   int _currentIndex = 0;
   int _lastReportedPage = 0;
   late OnStageBloc _onStageBloc;
@@ -33,7 +34,6 @@ class _SongOrderScreenState extends State<SongOrderScreen>
     super.initState();
     _onStageBloc = OnStageBloc();
     _tabController = TabController(vsync: this, length: 4);
-    _pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       /// Pre-cache images for smooth transitions
       _preCacheImages();
@@ -64,56 +64,61 @@ class _SongOrderScreenState extends State<SongOrderScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return BlocProvider.value(
-      value: _onStageBloc,
-      child: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            // Background gradient
-            SafeArea(
-              child: SizedBox(
-                height: 105,
-                width: double.infinity,
-                child: isDark
-                    ? null
-                    : const DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
-                        ),
-                      ),
-              ),
-            ),
-
-            // Main content with NestedScrollView
-            NestedScrollView(
-              key: const Key('stage_dashboard'),
-              physics: const ClampingScrollPhysics(),
-              headerSliverBuilder: (context, innerBoxIsScrolled) => _buildSliverBuilder(context),
-              body: NotificationListener<ScrollNotification>(
-                onNotification: (ScrollNotification notification) {
-                  /// Handle page changes without causing scroll lag
-                  if (notification.depth == 0 && notification is ScrollEndNotification) {
-                    final PageMetrics metrics = notification.metrics as PageMetrics;
-                    final int currentPage = (metrics.page ?? 0).round();
-                    if (currentPage != _lastReportedPage) {
-                      _lastReportedPage = currentPage;
-                      _onPageChange(currentPage);
-                    }
-                  }
-                  return false;
-                },
-                child: PageView.builder(
-                  key: const Key('pageView'),
-                  itemCount: 4,
-                  controller: _pageController,
-                  itemBuilder: (_, index) => BlocProvider.value(
-                    value: _onStageBloc,
-                    child: SongOrderList(tabIndex: index, key: ValueKey('song_order_list_$index')),
+    return Scaffold(
+      body: BlocProvider(
+        create: (context) => _onStageBloc,
+        child: Builder(
+          builder: (context) {
+            return Stack(
+              children: <Widget>[
+                // Background gradient
+                SafeArea(
+                  child: SizedBox(
+                    height: 105,
+                    width: double.infinity,
+                    child: isDark
+                        ? null
+                        : const DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Color(0xFF243055), Color(0xFF354672)],
+                              ),
+                            ),
+                          ),
                   ),
                 ),
-              ),
-            ),
-          ],
+
+                // Main content with NestedScrollView
+                NestedScrollView(
+                  key: const Key('song_orders'),
+                  physics: const ClampingScrollPhysics(),
+                  headerSliverBuilder: (context, innerBoxIsScrolled) =>
+                      _buildSliverBuilder(context),
+                  body: NotificationListener<ScrollNotification>(
+                    onNotification: (ScrollNotification notification) {
+                      /// Handle page changes without causing scroll lag
+                      if (notification.depth == 0 && notification is ScrollEndNotification) {
+                        final PageMetrics metrics = notification.metrics as PageMetrics;
+                        final int currentPage = (metrics.page ?? 0).round();
+                        if (currentPage != _lastReportedPage) {
+                          _lastReportedPage = currentPage;
+                          _onPageChange(context, currentPage);
+                        }
+                      }
+                      return false;
+                    },
+                    child: PageView.builder(
+                      key: const Key('pageView'),
+                      itemCount: 4,
+                      controller: _pageController,
+                      itemBuilder: (_, index) =>
+                          SongOrderList(tabIndex: index, key: ValueKey('song_order_list_$index')),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -143,7 +148,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
           centerTitle: true,
           expandedHeight: 100.0,
           pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
+          flexibleSpace: MyFlexibleSpaceBar(
             background: isDark
                 ? Container(height: 113.0, color: const Color(0xFF121212))
                 : Container(
@@ -153,14 +158,6 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                       gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
                     ),
                   ),
-            /*
-                : LoadAssetImage(
-                    'order/order_bg',
-                    width: double.infinity,
-                    height: 113.0,
-                    fit: BoxFit.fill,
-                  ),
-                  */
             centerTitle: true,
             titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
             collapseMode: CollapseMode.pin,
@@ -180,7 +177,6 @@ class _SongOrderScreenState extends State<SongOrderScreen>
         delegate: _SliverAppBarDelegate(
           Container(
             decoration: BoxDecoration(
-              // color: isDark ? const Color(0xFF121212) : null,
               image: isDark
                   ? null
                   : DecorationImage(
@@ -196,16 +192,11 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                 color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
                 child: Container(
                   height: 88.0,
-                  // padding: const EdgeInsets.only(top: 8.0),
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TabBar(
                     labelPadding: EdgeInsets.zero,
                     controller: _tabController,
                     dividerHeight: 0,
-                    // labelColor: isDark ? Colors.black87 : Colors.white,
-                    // unselectedLabelColor: isDark ? Colors.grey[400] : Colors.white70,
-                    // labelStyle: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                    // unselectedLabelStyle: const TextStyle(fontSize: 10),
                     indicatorColor: Colors.transparent,
                     tabs: <Widget>[
                       _StageTabView(
@@ -252,44 +243,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
     ];
   }
 
-  /*
-  Widget _buildStageListPage(int index) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 40),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, itemIndex) {
-                return Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Theme.of(context).primaryColor,
-                      child: Text('${index + 1}'),
-                    ),
-                    title: Text('Stage Performance ${itemIndex + 1}'),
-                    subtitle: Text('Band Name • ${DateTime.now().toString().substring(0, 10)}'),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                    onTap: () {
-                      // Handle stage item tap
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  */
-
-  void _onPageChange(int index) {
+  void _onPageChange(BuildContext context, int index) {
     /// Dispatch Bloc event to update the active tab index
     context.read<OnStageBloc>().add(OnStageTabChangedEvent(index));
 
