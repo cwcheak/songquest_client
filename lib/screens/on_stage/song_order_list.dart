@@ -18,7 +18,7 @@ class _SongOrderListState extends State<SongOrderList> {
   final ScrollController _controller = ScrollController();
   bool _isLoading = false;
   int _tabIndex = 0;
-  List<String> _list = <String>['1', '2', '3'];
+  List<String> _list = <String>['1', '2', '3', '4', '5', '6', '7', '8', '9'];
   int _currentActiveTabIndex = 0;
 
   @override
@@ -64,10 +64,6 @@ class _SongOrderListState extends State<SongOrderList> {
             controller: controller,
             key: PageStorageKey<String>('$_tabIndex'),
             slivers: <Widget>[
-              SliverOverlapInjector(
-                ///SliverAppBar的expandedHeight高度,避免重叠
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              ),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 sliver: _list.isEmpty

@@ -19,7 +19,11 @@ class SongOrderItem extends StatelessWidget {
         // elevation: 1,
         color: backgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        child: Padding(padding: const EdgeInsets.all(16.0), child: _buildContent(context)),
+        // child: Padding(padding: const EdgeInsets.all(16.0), child: _buildContent(context)),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+          child: _buildContent(context),
+        ),
       ),
     );
   }
@@ -33,11 +37,15 @@ class SongOrderItem extends StatelessWidget {
 
     final TextStyle? textTextStyle = Theme.of(
       context,
-    ).textTheme.bodySmall?.copyWith(letterSpacing: -0.2);
+    ).textTheme.bodySmall?.copyWith(fontSize: 12, letterSpacing: -0.2);
 
     final TextStyle? artistTextStyle = Theme.of(
       context,
     ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w400, letterSpacing: -0.2);
+
+    final TextStyle? dateTextStyle = Theme.of(
+      context,
+    ).textTheme.bodySmall?.copyWith(fontSize: 10, fontWeight: FontWeight.w300, letterSpacing: -0.2);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +53,13 @@ class SongOrderItem extends StatelessWidget {
         Row(
           children: <Widget>[
             Expanded(child: Text('David Cheong', style: textTextStyle)),
-            Text('#128 (Dec 25, 10:20 PM)', style: textTextStyle),
+            Text('#128', style: textTextStyle),
+          ],
+        ),
+        Row(
+          children: <Widget>[
+            Expanded(child: SizedBox.shrink()),
+            Text('Dec 25, 10:20 PM', style: dateTextStyle),
           ],
         ),
         const SizedBox(height: 4.0),

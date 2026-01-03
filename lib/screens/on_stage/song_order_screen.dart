@@ -144,31 +144,47 @@ class _SongOrderScreenState extends State<SongOrderScreen>
             ),
           ],
           backgroundColor: Colors.transparent,
+          title: Text(
+            'Ang Ang\'s Roastery',
+            style: TextStyle(
+              color: isDark ? Colors.black87 : Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+          ),
           elevation: 0.0,
           centerTitle: true,
           expandedHeight: 100.0,
           pinned: true,
-          flexibleSpace: MyFlexibleSpaceBar(
-            background: isDark
-                ? Container(height: 113.0, color: const Color(0xFF121212))
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 113.0,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
-                    ),
+          flexibleSpace: FlexibleSpaceBar(
+            background: Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 113.0,
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
                   ),
-            centerTitle: true,
-            titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
-            collapseMode: CollapseMode.pin,
-            title: Text(
-              'Ang Ang\'s Roastery',
-              style: TextStyle(
-                color: isDark ? Colors.black87 : Colors.white,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  child: Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
+                ),
+              ],
             ),
+            centerTitle: true,
+            // titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
+            collapseMode: CollapseMode.pin,
+            // title: Text(
+            //   'Ang Ang\'s Roastery',
+            //   style: TextStyle(
+            //     color: isDark ? Colors.black87 : Colors.white,
+            //     fontWeight: FontWeight.w500,
+            //     fontSize: 14,
+            //   ),
+            // ),
           ),
         ),
       ),
