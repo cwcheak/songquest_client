@@ -50,10 +50,11 @@ class _SongOrderListState extends State<SongOrderList> {
         // Determine if this tab should have its own scroll controller
         // When _tabIndex != _currentActiveTabIndex, this tab is not active
         // so it gets its own controller to prevent scroll synchronization
-        final bool shouldUseOwnController = _tabIndex != _currentActiveTabIndex;
-        final ScrollController? controller = shouldUseOwnController ? _controller : null;
 
-        Logger.instance.d('shouldUseOwnController : ${shouldUseOwnController ? 'true' : 'false'}');
+        // final bool shouldUseOwnController = _tabIndex != _currentActiveTabIndex;
+        // final ScrollController? controller = shouldUseOwnController ? _controller : null;
+
+        // Logger.instance.d('shouldUseOwnController : ${shouldUseOwnController ? 'true' : 'false'}');
 
         return RefreshIndicator(
           onRefresh: _onRefresh,
@@ -61,9 +62,12 @@ class _SongOrderListState extends State<SongOrderList> {
           child: CustomScrollView(
             /// 这里指定controller可以与外层NestedScrollView的滚动分离，避免一处滑动，5个Tab中的列表同步滑动。
             /// 这种方法的缺点是会重新layout列表
-            controller: controller,
+            controller: _tabIndex != _currentActiveTabIndex ? _controller : null,
             key: PageStorageKey<String>('$_tabIndex'),
             slivers: <Widget>[
+              SliverOverlapInjector(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 sliver: _list.isEmpty

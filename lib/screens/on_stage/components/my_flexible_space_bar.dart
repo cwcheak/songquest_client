@@ -30,7 +30,11 @@ class MyFlexibleSpaceBar extends StatefulWidget {
     this.centerTitle,
     this.titlePadding,
     this.collapseMode = CollapseMode.parallax,
+    this.onCollapseProgressChanged,
   });
+
+  /// Callback that provides the collapse progress (0.0 = expanded, 1.0 = collapsed)
+  final void Function(double progress)? onCollapseProgressChanged;
 
   /// The primary contents of the flexible space bar when expanded.
   ///
@@ -152,8 +156,10 @@ class _FlexibleSpaceBarState extends State<MyFlexibleSpaceBar> {
   void initState() {
     //监听Widget是否绘制完毕
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final RenderBox? renderBoxRed = _key.currentContext!.findRenderObject() as RenderBox?;
-      _offset = renderBoxRed!.size.width / 2;
+      final RenderBox? renderBoxRed = _key.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBoxRed != null) {
+        _offset = renderBoxRed.size.width / 2;
+      }
     });
     super.initState();
   }
@@ -174,6 +180,11 @@ class _FlexibleSpaceBarState extends State<MyFlexibleSpaceBar> {
       0.0,
       1.0,
     );
+
+    // Calculate opacity for the Positioned widget based on collapse state
+    // When expanded (t=0), opacity is 1.0
+    // When collapsed (t=1), opacity is 0.0
+    final double positionedWidgetOpacity = 1.0 - t;
 
     // background image
     if (widget.background != null) {
@@ -237,6 +248,11 @@ class _FlexibleSpaceBarState extends State<MyFlexibleSpaceBar> {
           ),
         );
       }
+    }
+
+    // Notify about collapse progress change
+    if (widget.onCollapseProgressChanged != null) {
+      widget.onCollapseProgressChanged!(t);
     }
 
     return ClipRect(child: Stack(children: children));

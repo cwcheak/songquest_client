@@ -28,6 +28,8 @@ class _SongOrderScreenState extends State<SongOrderScreen>
   int _currentIndex = 0;
   int _lastReportedPage = 0;
   late OnStageBloc _onStageBloc;
+  _CollapsiblePositionedWidgetState? _collapsibleWidgetState;
+  final GlobalKey<_CollapsiblePositionedWidgetState> _collapsibleKey = GlobalKey();
 
   @override
   void initState() {
@@ -37,6 +39,8 @@ class _SongOrderScreenState extends State<SongOrderScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       /// Pre-cache images for smooth transitions
       _preCacheImages();
+      // Initialize the collapsible widget state reference
+      _collapsibleWidgetState = _collapsibleKey.currentState;
     });
   }
 
@@ -156,7 +160,15 @@ class _SongOrderScreenState extends State<SongOrderScreen>
           centerTitle: true,
           expandedHeight: 100.0,
           pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
+          flexibleSpace: MyFlexibleSpaceBar(
+            onCollapseProgressChanged: (double progress) {
+              // Invert progress so 0.0 = expanded (visible) and 1.0 = collapsed (hidden)
+              // Accelerate the fading by making it fade out faster
+              final opacity = 1.0 - (progress * 1.5).clamp(0.0, 1.0);
+              if (_collapsibleWidgetState != null) {
+                _collapsibleWidgetState!.updateOpacity(opacity);
+              }
+            },
             background: Stack(
               fit: StackFit.expand,
               children: [
@@ -168,13 +180,22 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                   ),
                 ),
                 Positioned(
-                  bottom: 20,
+                  top: 60,
                   left: 20,
-                  child: Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
+                  child: CollapsiblePositionedWidget(
+                    key: _collapsibleKey,
+                    child: Column(
+                      children: [
+                        Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
+                        Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
+                        Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
-            centerTitle: true,
+            // centerTitle: true,
             // titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
             collapseMode: CollapseMode.pin,
             // title: Text(
@@ -191,7 +212,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
       SliverPersistentHeader(
         pinned: true,
         delegate: _SliverAppBarDelegate(
-          Container(
+          DecoratedBox(
             decoration: BoxDecoration(
               image: isDark
                   ? null
@@ -207,13 +228,14 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
                 child: Container(
-                  height: 88.0,
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  height: 80.0,
+                  padding: const EdgeInsets.only(top: 8.0),
                   child: TabBar(
                     labelPadding: EdgeInsets.zero,
                     controller: _tabController,
                     dividerHeight: 0,
                     indicatorColor: Colors.transparent,
+                    labelColor: Theme.of(context).colorScheme.onSecondary,
                     tabs: <Widget>[
                       _StageTabView(
                         0,
@@ -296,6 +318,37 @@ class _SongOrderScreenState extends State<SongOrderScreen>
         ).showSnackBar(const SnackBar(content: Text('Deleting stages...')));
         break;
     }
+  }
+}
+
+class CollapsiblePositionedWidget extends StatefulWidget {
+  final Widget child;
+  final double initialOpacity;
+
+  const CollapsiblePositionedWidget({Key? key, required this.child, this.initialOpacity = 1.0})
+    : super(key: key);
+
+  @override
+  _CollapsiblePositionedWidgetState createState() => _CollapsiblePositionedWidgetState();
+}
+
+class _CollapsiblePositionedWidgetState extends State<CollapsiblePositionedWidget> {
+  double _opacity = 1.0;
+
+  void updateOpacity(double opacity) {
+    setState(() {
+      _opacity = opacity;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: _opacity,
+      duration: const Duration(milliseconds: 100),
+      curve: Curves.easeInOut,
+      child: widget.child,
+    );
   }
 }
 
