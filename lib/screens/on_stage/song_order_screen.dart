@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:songquest/screens/components/load_image.dart';
 import './components/my_flexible_space_bar.dart';
+import './components/elapsed_time_widget.dart';
 import 'package:songquest/helper/image_utils.dart';
 import 'package:songquest/screens/on_stage/song_order_list.dart';
 import 'package:songquest/bloc/on_stage_bloc.dart';
@@ -158,7 +159,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
           ),
           elevation: 0.0,
           centerTitle: true,
-          expandedHeight: 100.0,
+          expandedHeight: 200.0,
           pinned: true,
           flexibleSpace: MyFlexibleSpaceBar(
             onCollapseProgressChanged: (double progress) {
@@ -179,18 +180,11 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                     gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
                   ),
                 ),
-                Positioned(
-                  top: 60,
-                  left: 20,
-                  child: CollapsiblePositionedWidget(
-                    key: _collapsibleKey,
-                    child: Column(
-                      children: [
-                        Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
-                        Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
-                        Text('Subtitle or other info', style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
+                CollapsiblePositionedWidget(
+                  key: _collapsibleKey,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    child: Column(children: [SizedBox(height: 56.0), _buildStageInfo(context)]),
                   ),
                 ),
               ],
@@ -228,7 +222,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
                 child: Container(
-                  height: 80.0,
+                  // height: 80.0,
                   padding: const EdgeInsets.only(top: 8.0),
                   child: TabBar(
                     labelPadding: EdgeInsets.zero,
@@ -237,28 +231,28 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                     indicatorColor: Colors.transparent,
                     labelColor: Theme.of(context).colorScheme.onSecondary,
                     tabs: <Widget>[
-                      _StageTabView(
+                      _OrderTabView(
                         0,
                         'New  ',
                         'order/new_order_active',
                         'order/new_order_inactive',
                         currentIndex: _currentIndex,
                       ),
-                      _StageTabView(
+                      _OrderTabView(
                         1,
                         'Pending',
                         'order/pending_active',
                         'order/pending_inactive',
                         currentIndex: _currentIndex,
                       ),
-                      _StageTabView(
+                      _OrderTabView(
                         2,
                         'Completed',
                         'order/completed_active',
                         'order/completed_inactive',
                         currentIndex: _currentIndex,
                       ),
-                      _StageTabView(
+                      _OrderTabView(
                         3,
                         'Cancelled',
                         'order/cancelled_active',
@@ -268,6 +262,9 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                     ],
                     onTap: (index) {
                       if (!mounted) return;
+                      setState(() {
+                        _currentIndex = index;
+                      });
                       _pageController.jumpToPage(index);
                     },
                   ),
@@ -275,7 +272,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
               ),
             ),
           ),
-          86.0,
+          80.0,
         ),
       ),
     ];
@@ -284,6 +281,11 @@ class _SongOrderScreenState extends State<SongOrderScreen>
   void _onPageChange(BuildContext context, int index) {
     /// Dispatch Bloc event to update the active tab index
     context.read<OnStageBloc>().add(OnStageTabChangedEvent(index));
+
+    /// Update the current index to match the page change
+    setState(() {
+      _currentIndex = index;
+    });
 
     /// Animate tab controller to match page change
     _tabController.animateTo(index, duration: const Duration(milliseconds: 300));
@@ -321,6 +323,114 @@ class _SongOrderScreenState extends State<SongOrderScreen>
   }
 }
 
+Widget _buildStageInfo(BuildContext context) {
+  final TextStyle? textStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+    fontWeight: FontWeight.w300,
+    letterSpacing: -0.2,
+    color: Colors.white,
+  );
+
+  final TextStyle? statStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+    fontWeight: FontWeight.w500,
+    letterSpacing: -0.2,
+    color: Colors.white,
+  );
+
+  // Example start time - in a real app, this would come from your data
+  final DateTime startTime = DateTime.now().subtract(const Duration(minutes: 59, seconds: 50));
+
+  return Container(
+    width: MediaQuery.of(context).size.width,
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey, width: 1.0),
+      borderRadius: BorderRadius.circular(10),
+    ),
+    padding: EdgeInsets.all(16.0),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            // Location
+            Expanded(
+              child: Row(
+                children: [
+                  Icon(Icons.location_on_outlined, color: Colors.white, size: 16),
+                  SizedBox(width: 4.0),
+                  Text('Ang Ang Roastery', style: textStyle, overflow: TextOverflow.ellipsis),
+                ],
+              ),
+            ),
+            // Timer
+            Row(
+              children: [
+                Icon(Icons.access_time_outlined, color: Colors.white, size: 16),
+                SizedBox(width: 4.0),
+                ElapsedTimeWidget(startTime: startTime),
+              ],
+            ),
+          ],
+        ),
+        // Band Name
+        Row(
+          children: [
+            Icon(Icons.groups, color: Colors.white, size: 16),
+            SizedBox(width: 4.0),
+            Text('Ang Ang Roastery', style: textStyle, overflow: TextOverflow.ellipsis),
+          ],
+        ),
+        // Stat
+        Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Row(
+            spacing: 8,
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('185', textAlign: TextAlign.center, style: statStyle),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text('Songs Performed', textAlign: TextAlign.center, style: textStyle),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text('\$200', textAlign: TextAlign.center, style: statStyle),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 6),
+                      child: Text('Tipping', textAlign: TextAlign.center, style: textStyle),
+                    ),
+                  ],
+                ),
+              ),
+              // Expanded(
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: <Widget>[
+              //       Text('185 cm', textAlign: TextAlign.center, style: statStyle),
+              //       Padding(
+              //         padding: const EdgeInsets.only(top: 6),
+              //         child: Text('Height', textAlign: TextAlign.center, style: textStyle),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 class CollapsiblePositionedWidget extends StatefulWidget {
   final Widget child;
   final double initialOpacity;
@@ -352,14 +462,14 @@ class _CollapsiblePositionedWidgetState extends State<CollapsiblePositionedWidge
   }
 }
 
-class _StageTabView extends StatelessWidget {
+class _OrderTabView extends StatelessWidget {
   final int index;
   final String text;
   final String activeIcon;
   final String inactiveIcon;
   final int currentIndex;
 
-  const _StageTabView(
+  const _OrderTabView(
     this.index,
     this.text,
     this.activeIcon,
@@ -370,13 +480,14 @@ class _StageTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isActive = currentIndex == index;
 
     return Stack(
       children: <Widget>[
         Container(
           width: 62.0,
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          // padding: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.only(top: 8.0),
+          // decoration: BoxDecoration(border: Border.all(color: Colors.black87, width: 2.0)),
           child: Column(
             children: <Widget>[
               LoadAssetImage(
