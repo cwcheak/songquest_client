@@ -11,17 +11,21 @@ class MyBandsScreen extends StatefulWidget {
 
 class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  bool _showDummyData = false;
+  bool _showDummyData = true;
+  late TextEditingController _nameController;
+  bool _showError = false;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _nameController = TextEditingController();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -31,12 +35,12 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
       appBar: AppBar(
         title: const Text('My Bands'),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back),
+        //   onPressed: () {
+        //     Navigator.pop(context);
+        //   },
+        // ),
         bottom: TabBar(
           controller: _tabController,
           // isScrollable: true,
@@ -130,8 +134,9 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
   }
 
   void _showCreateBandBottomSheet(BuildContext context) {
-    final TextEditingController _nameController = TextEditingController();
-    bool showError = false;
+    // Reset state for each show
+    _nameController.clear();
+    _showError = false;
 
     showModalBottomSheet(
       context: context,
@@ -140,79 +145,75 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 4 + 40,
-              padding: const EdgeInsets.all(15),
-              child: Column(
+        return Container(
+          height: MediaQuery.of(context).size.height / 4 + 40,
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            children: [
+              const SizedBox(height: 8),
+              Row(
                 children: [
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Create New Band",
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Create New Band",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-                  TextField(
-                    controller: _nameController,
-                    maxLength: 30,
-                    autofocus: true,
-                    cursorColor: Theme.of(context).primaryColor,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
-                      ),
-                      labelText: "Band Name (Required, max 30 characters)",
-                      labelStyle: const TextStyle(color: Colors.grey),
-                      errorText: showError ? 'Please enter a valid band name' : null,
-                    ),
-                    onChanged: (value) {
-                      if (showError) {
-                        setState(() {
-                          showError = false;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () {
-                        final bandName = _nameController.text.trim();
-                        if (bandName.isEmpty) {
-                          setState(() {
-                            showError = true;
-                          });
-                          return;
-                        }
-                        Navigator.of(context).pop();
-                        context.push('/band-members', extra: {'bandName': bandName});
-                      },
-                      child: const Text("Create"),
                     ),
                   ),
                 ],
               ),
-            );
-          },
+              const SizedBox(height: 30),
+              TextField(
+                controller: _nameController,
+                maxLength: 30,
+                autofocus: true,
+                cursorColor: Theme.of(context).primaryColor,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey, width: 2.0),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2.0),
+                  ),
+                  labelText: "Band Name (Required, max 30 characters)",
+                  labelStyle: const TextStyle(color: Colors.grey),
+                  errorText: _showError ? 'Please enter a valid band name' : null,
+                ),
+                onChanged: (value) {
+                  if (_showError) {
+                    setState(() {
+                      _showError = false;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: () {
+                    final bandName = _nameController.text.trim();
+                    if (bandName.isEmpty) {
+                      setState(() {
+                        _showError = true;
+                      });
+                      return;
+                    }
+                    Navigator.of(context).pop();
+                    context.push('/band-members', extra: {'bandName': bandName});
+                  },
+                  child: const Text("Create"),
+                ),
+              ),
+            ],
+          ),
         );
       },
     );

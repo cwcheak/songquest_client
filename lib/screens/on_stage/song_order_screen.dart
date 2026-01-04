@@ -159,7 +159,7 @@ class _SongOrderScreenState extends State<SongOrderScreen>
           ),
           elevation: 0.0,
           centerTitle: true,
-          expandedHeight: 200.0,
+          expandedHeight: 186.0,
           pinned: true,
           flexibleSpace: MyFlexibleSpaceBar(
             onCollapseProgressChanged: (double progress) {
@@ -170,24 +170,17 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                 _collapsibleWidgetState!.updateOpacity(opacity);
               }
             },
-            background: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 113.0,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
-                  ),
+            background: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(colors: [Color(0xFF243055), Color(0xFF354672)]),
+              ),
+              child: CollapsiblePositionedWidget(
+                key: _collapsibleKey,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Column(children: [SizedBox(height: 56.0), _buildStageInfo(context)]),
                 ),
-                CollapsiblePositionedWidget(
-                  key: _collapsibleKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                    child: Column(children: [SizedBox(height: 56.0), _buildStageInfo(context)]),
-                  ),
-                ),
-              ],
+              ),
             ),
             // centerTitle: true,
             // titlePadding: const EdgeInsetsDirectional.only(start: 16.0, bottom: 14.0),
@@ -345,7 +338,7 @@ Widget _buildStageInfo(BuildContext context) {
       border: Border.all(color: Colors.grey, width: 1.0),
       borderRadius: BorderRadius.circular(10),
     ),
-    padding: EdgeInsets.all(16.0),
+    padding: EdgeInsets.all(12.0),
     child: Column(
       children: [
         Row(
