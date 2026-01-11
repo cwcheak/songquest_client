@@ -2,28 +2,117 @@ import 'package:flutter/material.dart';
 import 'package:songquest/helper/logger.dart';
 import 'package:songquest/screens/components/custom_dialog.dart';
 
-class SongOrderItem extends StatelessWidget {
-  const SongOrderItem({super.key, required this.tabIndex});
+class SongOrderItem extends StatefulWidget {
+  const SongOrderItem({
+    super.key,
+    required this.tabIndex,
+    required this.onAccept,
+    required this.onReject,
+  });
 
   final int tabIndex;
+  final VoidCallback onAccept;
+  final VoidCallback onReject;
+
+  @override
+  State<SongOrderItem> createState() => _SongOrderItemState();
+}
+
+class _SongOrderItemState extends State<SongOrderItem> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _heightAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    _heightAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _acceptAllDialog(BuildContext context, int orderNo) async {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          title: const Text('Confirm Accept All'),
+          content: const Text('Are you sure you want to accept all songs in this request?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Accept All'),
+              onPressed: () {
+                Logger.instance.d("Order $orderNo accepted all songs");
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    ).then((confirmed) {
+      if (confirmed == true) {
+        _animateAndRemove();
+      }
+    });
+  }
+
+  void _animateAndRemove() {
+    _controller.forward().then((_) {
+      widget.onAccept();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final Color backgroundColor = isDark ? Colors.black87 : Colors.white;
 
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: Card(
-        // elevation: 1,
-        color: backgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        // child: Padding(padding: const EdgeInsets.all(16.0), child: _buildContent(context)),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-          child: _buildContent(context),
-        ),
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return SizeTransition(
+            sizeFactor: _heightAnimation,
+            axisAlignment: 0.0,
+            child: Card(
+              color: backgroundColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(-1.0, 0.0),
+                ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
+                child: FadeTransition(
+                  opacity: Tween<double>(
+                    begin: 1.0,
+                    end: 0.0,
+                  ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                    child: _buildContent(context),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -51,19 +140,26 @@ class SongOrderItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[Text('Received: Dec 25, 10:20 PM', style: dateTextStyle)],
+        ),
+        // const SizedBox(height: 2.0),
+        Divider(color: Theme.of(context).dividerColor, thickness: 1),
+        // const SizedBox(height: 2.0),
+        Row(
           children: <Widget>[
             Expanded(child: Text('David Cheong', style: textTextStyle)),
             Text('#128', style: textTextStyle),
           ],
         ),
-        Row(
-          children: <Widget>[
-            Expanded(child: SizedBox.shrink()),
-            Text('Dec 25, 10:20 PM', style: dateTextStyle),
-          ],
-        ),
-        const SizedBox(height: 4.0),
-        Divider(),
+        // Row(
+        //   children: <Widget>[
+        //     Expanded(child: SizedBox.shrink()),
+        //     Text('Dec 25, 10:20 PM', style: dateTextStyle),
+        //   ],
+        // ),
+        // const SizedBox(height: 4.0),
+        Divider(color: Theme.of(context).dividerColor, thickness: 1),
         const SizedBox(height: 4.0),
         Row(
           children: <Widget>[
@@ -94,33 +190,33 @@ class SongOrderItem extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4.0),
-        Divider(),
+        Divider(color: Theme.of(context).dividerColor, thickness: 1),
         const SizedBox(height: 4.0),
         Text('Note:', style: textTextStyle),
         const SizedBox(height: 8.0),
         Text('谢谢你们！Thank you for accepting my song. Love you all!!!', style: textTextStyle),
-        Divider(),
+        Divider(color: Theme.of(context).dividerColor, thickness: 1),
         const SizedBox(height: 4.0),
         Row(
           spacing: 8.0,
           children: [
             const Expanded(child: SizedBox.shrink()),
             OrderItemButton(
-              key: Key('order_item_accept_all_$tabIndex'),
+              key: Key('order_item_accept_all_${widget.tabIndex}'),
               text: 'Accept All',
               textColor: isDark ? Colors.black87 : Colors.white,
               bgColor: isDark ? Colors.black87 : Theme.of(context).colorScheme.secondary,
               onTap: () => _acceptAllDialog(context, 128),
             ),
             OrderItemButton(
-              key: Key('order_item_accept_partial_$tabIndex'),
+              key: Key('order_item_accept_partial_${widget.tabIndex}'),
               text: 'Accept Partial',
               textColor: isDark ? Colors.white : Colors.black87,
               bgColor: isDark ? Colors.black87 : Colors.grey[300],
               onTap: () => _acceptPartialDialog(context, 128),
             ),
             OrderItemButton(
-              key: Key('order_item_reject_$tabIndex'),
+              key: Key('order_item_reject_${widget.tabIndex}'),
               text: 'Reject',
               textColor: isDark ? Colors.white : Colors.black87,
               bgColor: isDark ? Colors.black87 : Colors.grey[300],
@@ -129,37 +225,6 @@ class SongOrderItem extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-
-  void _acceptAllDialog(BuildContext context, int orderNo) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return CustomDialog(
-          title: const Text('Confirm Accept All'),
-          content: const Text('Are you sure you want to accept all songs in this request?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Accept All'),
-              onPressed: () {
-                Logger.instance.d("Order $orderNo accepted all songs");
-                Navigator.of(context).pop();
-                // TODO: Add actual accept all logic here
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -255,35 +320,36 @@ class SongOrderItem extends StatelessWidget {
     );
   }
 
-  void _rejectDialog(BuildContext context, int orderNo) {
-    showDialog(
+  Future<void> _rejectDialog(BuildContext context, int orderNo) async {
+    await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return CustomDialog(
           title: const Text('Confirm Rejection'),
-          content: const Text(
-            'Are you sure to reject this song request? This action cannot be undone.',
-          ),
+          content: const Text('Are you sure to reject this song request?'),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(false);
               },
             ),
             TextButton(
               child: const Text('Reject'),
               onPressed: () {
                 Logger.instance.d("Order $orderNo rejected");
-                Navigator.of(context).pop();
-                // TODO: Add actual reject logic here
+                Navigator.of(context).pop(true);
               },
             ),
           ],
         );
       },
-    );
+    ).then((confirmed) {
+      if (confirmed == true) {
+        _animateAndRemove();
+      }
+    });
   }
 }
 

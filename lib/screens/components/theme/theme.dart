@@ -92,6 +92,7 @@ class AppTheme extends ChangeNotifier {
   static ThemeData createLightThemeData() {
     return ThemeData(
       useMaterial3: true,
+      dividerColor: Colors.grey[300],
       colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.white,
         primary: primaryColor,

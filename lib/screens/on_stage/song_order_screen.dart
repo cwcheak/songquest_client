@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:songquest/screens/components/load_image.dart';
 import './components/my_flexible_space_bar.dart';
 import './components/elapsed_time_widget.dart';
@@ -9,6 +10,7 @@ import 'package:songquest/helper/image_utils.dart';
 import 'package:songquest/screens/on_stage/song_order_list.dart';
 import 'package:songquest/bloc/on_stage_bloc.dart';
 import 'package:songquest/bloc/on_stage_event.dart';
+import 'package:songquest/screens/components/custom_dialog.dart';
 
 enum StageMenuItems { newStage, editStage, deleteStages }
 
@@ -216,7 +218,8 @@ class _SongOrderScreenState extends State<SongOrderScreen>
                 color: isDark ? const Color(0xFF1e1e1e) : Colors.white,
                 child: Container(
                   // height: 80.0,
-                  padding: const EdgeInsets.only(top: 8.0),
+                  // padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4.0, right: 4.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: TabBar(
                     labelPadding: EdgeInsets.zero,
                     controller: _tabController,
@@ -332,6 +335,107 @@ Widget _buildStageInfo(BuildContext context) {
   // Example start time - in a real app, this would come from your data
   final DateTime startTime = DateTime.now().subtract(const Duration(minutes: 59, seconds: 50));
 
+  // String _formatDuration(Duration duration) {
+  //   final int totalSeconds = duration.inSeconds;
+  //   final int hours = totalSeconds ~/ 3600;
+  //   final int minutes = (totalSeconds % 3600) ~/ 60;
+  //   final int seconds = totalSeconds % 60;
+
+  //   if (hours > 0) {
+  //     return '${hours}h ${minutes}m ${seconds}s';
+  //   } else {
+  //     return '${minutes}m ${seconds}s';
+  //   }
+  // }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('dd-MMM-yyyy, h:mm a').format(dateTime);
+  }
+
+  Widget _buildTimerInfoRow({
+    required IconData icon,
+    required String label,
+    required Widget valueWidget,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 20, color: Colors.grey[600]),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              valueWidget,
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showTimerInfoDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CustomDialog(
+          title: const Text(
+            'Timer Information',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTimerInfoRow(
+                icon: Icons.access_time,
+                label: 'Start Time',
+                valueWidget: Text(
+                  _formatDateTime(startTime),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildTimerInfoRow(
+                icon: Icons.timer,
+                label: 'Elapsed Time',
+                valueWidget: ElapsedTimeWidget(
+                  startTime: startTime,
+                  textStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   return Container(
     width: MediaQuery.of(context).size.width,
     decoration: BoxDecoration(
@@ -356,9 +460,12 @@ Widget _buildStageInfo(BuildContext context) {
             // Timer
             Row(
               children: [
-                Icon(Icons.access_time_outlined, color: Colors.white, size: 16),
+                Icon(Icons.timer_outlined, color: Colors.white, size: 16),
                 SizedBox(width: 4.0),
-                ElapsedTimeWidget(startTime: startTime),
+                GestureDetector(
+                  onTap: _showTimerInfoDialog,
+                  child: ElapsedTimeWidget(startTime: startTime),
+                ),
               ],
             ),
           ],

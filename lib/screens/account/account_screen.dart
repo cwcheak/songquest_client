@@ -23,9 +23,11 @@ class AccountScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16.0, top: 24, bottom: 8),
               child: Text(
                 'Settings',
-                style: Theme.of(
-                  context,
-                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
               ),
             ),
           ),
@@ -234,7 +236,7 @@ class AccountScreen extends StatelessWidget {
 
   Widget _buildSummarySection(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -266,10 +268,16 @@ class AccountScreen extends StatelessWidget {
     VoidCallback? onTap,
   ) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).primaryColor),
-      title: Text(title),
+      dense: true,
+      leading: Icon(icon, color: Theme.of(context).primaryColor, size: 20),
+      title: Text(
+        title,
+        style: Theme.of(
+          context,
+        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, letterSpacing: -0.2),
+      ),
       subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
-      trailing: Icon(Icons.chevron_right, color: Theme.of(context).primaryColor),
+      trailing: Icon(Icons.chevron_right, color: Theme.of(context).primaryColor, size: 22),
       onTap: onTap,
     );
   }

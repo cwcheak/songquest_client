@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class ElapsedTimeWidget extends StatefulWidget {
   final DateTime startTime;
+  final TextStyle? textStyle;
 
-  const ElapsedTimeWidget({Key? key, required this.startTime}) : super(key: key);
+  const ElapsedTimeWidget({Key? key, required this.startTime, this.textStyle}) : super(key: key);
 
   @override
   _ElapsedTimeWidgetState createState() => _ElapsedTimeWidgetState();
@@ -31,16 +32,17 @@ class _ElapsedTimeWidgetState extends State<ElapsedTimeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle? textStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
+    final TextStyle? defaultStyle = Theme.of(context).textTheme.bodySmall?.copyWith(
       fontWeight: FontWeight.w300,
       letterSpacing: -0.2,
       color: Colors.white,
     );
 
+    final TextStyle? style = widget.textStyle ?? defaultStyle;
     final Duration elapsed = DateTime.now().difference(widget.startTime);
     final String timeText = _formatDuration(elapsed);
 
-    return Text(timeText, style: textStyle);
+    return Text(timeText, style: style);
   }
 
   String _formatDuration(Duration duration) {

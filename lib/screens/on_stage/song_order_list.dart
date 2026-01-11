@@ -71,11 +71,25 @@ class _SongOrderListState extends State<SongOrderList> {
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 sliver: _list.isEmpty
-                    ? SliverFillRemaining(child: Placeholder())
+                    ? SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            'No new song requests',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                          ),
+                        ),
+                      )
                     : SliverList(
                         delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
                           return index < _list.length
-                              ? SongOrderItem(key: Key('order_item_$index'), tabIndex: _tabIndex)
+                              ? SongOrderItem(
+                                  key: Key('order_item_${_list[index]}'),
+                                  tabIndex: _tabIndex,
+                                  onAccept: () => _removeItem(_list[index]),
+                                  onReject: () => _removeItem(_list[index]),
+                                )
                               : Placeholder();
                         }, childCount: _list.length),
                       ),
@@ -88,4 +102,14 @@ class _SongOrderListState extends State<SongOrderList> {
   }
 
   Future<void> _onRefresh() async {}
+
+  void _removeItem(String itemId) {
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        setState(() {
+          _list.remove(itemId);
+        });
+      }
+    });
+  }
 }

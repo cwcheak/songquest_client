@@ -83,9 +83,14 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
       itemCount: leadBands.length,
       itemBuilder: (context, index) {
         return ListTile(
-          leading: const Icon(Icons.group),
-          title: Text(leadBands[index]),
-          trailing: const Icon(Icons.chevron_right),
+          leading: const Icon(Icons.group, size: 22),
+          title: Text(
+            leadBands[index],
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, letterSpacing: -0.2),
+          ),
+          trailing: const Icon(Icons.chevron_right, size: 22),
           onTap: () {
             // TODO: Navigate to band details
           },
@@ -122,9 +127,14 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
       itemCount: memberBands.length,
       itemBuilder: (context, index) {
         return ListTile(
-          leading: const Icon(Icons.group),
-          title: Text(memberBands[index]),
-          trailing: const Icon(Icons.chevron_right),
+          leading: const Icon(Icons.group, size: 22),
+          title: Text(
+            memberBands[index],
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, letterSpacing: -0.2),
+          ),
+          trailing: const Icon(Icons.chevron_right, size: 22),
           onTap: () {
             context.push('/band-details', extra: {'bandName': memberBands[index]});
           },
