@@ -325,28 +325,198 @@ class _SongOrderItemState extends State<SongOrderItem> with SingleTickerProvider
   }
 
   Future<void> _rejectDialog(BuildContext context, int orderNo) async {
-    await showDialog(
+    // Mock list of reject reasons - in a real app, this would come from a repository or API
+    final List<Map<String, String>> rejectReasons = [
+      {'id': '1', 'reason': 'Song not available'},
+      {'id': '2', 'reason': 'Artist not found'},
+      {'id': '3', 'reason': 'Technical difficulty'},
+      {'id': '4', 'reason': 'Song too difficult'},
+      {'id': '5', 'reason': 'Wrong genre'},
+      {'id': '6', 'reason': 'I dunno the song\n\n不好意思， 这首歌我不会唱。'},
+      {'id': '7', 'reason': 'I dun wanna sing'},
+    ];
+
+    String? selectedReasonId;
+    String customReason = '';
+    bool isCustomReason = false;
+    final TextEditingController textController = TextEditingController();
+
+    return showModalBottomSheet(
       context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return CustomDialog(
-          title: const Text('Confirm Rejection'),
-          content: const Text('Are you sure to reject this song request?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            TextButton(
-              child: const Text('Reject'),
-              onPressed: () {
-                Logger.instance.d("Order $orderNo rejected");
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Reject Song Request",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('Select a reason for rejection:'),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () async {
+                        // Open another bottom sheet to select a predefined reason
+                        String? selectedReason = await showModalBottomSheet<String>(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          builder: (context) {
+                            return StatefulBuilder(
+                              builder: (context, setState) {
+                                return Container(
+                                  height: MediaQuery.of(context).size.height * 0.6,
+                                  padding: const EdgeInsets.all(16),
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                "Select Reject Reason",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Theme.of(context).primaryColor,
+                                                  fontWeight: FontWeight.bold,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Expanded(
+                                        child: ListView.builder(
+                                          itemCount: rejectReasons.length,
+                                          itemBuilder: (context, index) {
+                                            return Card(
+                                              margin: const EdgeInsets.only(bottom: 8.0),
+                                              elevation: 0.5,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(8.0),
+                                                side: BorderSide(
+                                                  color:
+                                                      selectedReasonId ==
+                                                          rejectReasons[index]['id']!
+                                                      ? Theme.of(context).primaryColor
+                                                      : Colors.transparent,
+                                                  width: 1.0,
+                                                ),
+                                              ),
+                                              child: RadioListTile<String>(
+                                                title: Text(
+                                                  rejectReasons[index]['reason']!,
+                                                  style: const TextStyle(height: 1.4),
+                                                ),
+                                                value: rejectReasons[index]['id']!,
+                                                groupValue: selectedReasonId,
+                                                onChanged: (String? value) {
+                                                  Navigator.of(context).pop(value);
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        );
+
+                        // If a reason was selected, update the custom reason field
+                        if (selectedReason != null) {
+                          setState(() {
+                            selectedReasonId = selectedReason;
+                            isCustomReason = false;
+                            customReason = rejectReasons.firstWhere(
+                              (r) => r['id'] == selectedReason,
+                            )['reason']!;
+                            textController.text = customReason;
+                          });
+                        }
+                      },
+                      child: const Text('Predefined reject reason'),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('Or enter your own reason:'),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: textController,
+                    onChanged: (value) {
+                      setState(() {
+                        customReason = value;
+                        if (value.isNotEmpty) {
+                          isCustomReason = true;
+                          selectedReasonId = 'custom';
+                        } else {
+                          isCustomReason = false;
+                          selectedReasonId = null;
+                        }
+                      });
+                    },
+                    maxLines: 2,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your reason here...',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton(
+                      onPressed: () {
+                        if (selectedReasonId != null || customReason.isNotEmpty) {
+                          String reasonToLog = customReason.isNotEmpty
+                              ? customReason
+                              : rejectReasons.firstWhere(
+                                  (r) => r['id'] == selectedReasonId,
+                                )['reason']!;
+                          Logger.instance.d("Order $orderNo rejected with reason: $reasonToLog");
+                          Navigator.of(context).pop(true);
+                        }
+                      },
+                      child: const Text('Reject'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     ).then((confirmed) {
