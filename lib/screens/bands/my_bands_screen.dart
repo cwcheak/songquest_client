@@ -11,7 +11,7 @@ class MyBandsScreen extends StatefulWidget {
 
 class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  bool _showDummyData = true;
+  bool _showDummyData = false;
   late TextEditingController _nameController;
   bool _showError = false;
 
@@ -68,6 +68,12 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              Icons.group_add_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            const SizedBox(height: 16),
             const Text('You are not leading any bands yet.'),
             const SizedBox(height: 16),
             ElevatedButton(
@@ -110,6 +116,12 @@ class _MyBandsScreenState extends State<MyBandsScreen> with SingleTickerProvider
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              Icons.group_add_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            const SizedBox(height: 16),
             const Text('You are not a member of any bands yet.'),
             const SizedBox(height: 16),
             ElevatedButton(

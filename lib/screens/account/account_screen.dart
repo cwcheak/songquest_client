@@ -43,6 +43,13 @@ class AccountScreen extends StatelessWidget {
                   '',
                   () => context.push('/my-playlist'),
                 ),
+                _buildListItem(
+                  context,
+                  Icons.list_outlined,
+                  'Reject Reasons',
+                  '',
+                  () => context.push('/reject-reasons'),
+                ),
                 // _buildListItem(context, Icons.people, 'My Bands', '', () => context.push('/my-bands')),
               ].toList(),
             ),
@@ -279,6 +286,28 @@ class AccountScreen extends StatelessWidget {
       subtitle: subtitle.isNotEmpty ? Text(subtitle) : null,
       trailing: Icon(Icons.chevron_right, color: Theme.of(context).primaryColor, size: 22),
       onTap: onTap,
+    );
+  }
+
+  Widget _buildSubMenuItem(BuildContext context, IconData icon, String title, VoidCallback? onTap) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 56),
+      child: ListTile(
+        dense: true,
+        leading: Icon(icon, color: Theme.of(context).primaryColor.withOpacity(0.7), size: 20),
+        title: Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, letterSpacing: -0.2),
+        ),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: Theme.of(context).primaryColor.withOpacity(0.7),
+          size: 22,
+        ),
+        onTap: onTap,
+      ),
     );
   }
 

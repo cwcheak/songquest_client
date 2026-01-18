@@ -93,7 +93,7 @@ class _SongOrderItemState extends State<SongOrderItem> with SingleTickerProvider
             axisAlignment: 0.0,
             child: Card(
               color: backgroundColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
               child: SlideTransition(
                 position: Tween<Offset>(
                   begin: Offset.zero,
@@ -143,9 +143,13 @@ class _SongOrderItemState extends State<SongOrderItem> with SingleTickerProvider
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[Text('Received: Dec 25, 10:20 PM', style: dateTextStyle)],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[Text('Accepted: Dec 25, 10:23 PM', style: dateTextStyle)],
+        ),
         // const SizedBox(height: 2.0),
-        Divider(color: Theme.of(context).dividerColor, thickness: 1),
-        // const SizedBox(height: 2.0),
+        // Divider(color: Theme.of(context).dividerColor, thickness: 1),
+        const SizedBox(height: 16.0),
         Row(
           children: <Widget>[
             Expanded(child: Text('David Cheong', style: textTextStyle)),

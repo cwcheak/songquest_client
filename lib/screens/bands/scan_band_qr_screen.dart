@@ -220,8 +220,8 @@ class _ScanBandQrScreenState extends State<ScanBandQrScreen> {
 
   Widget _buildInstructions() {
     return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 0.5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

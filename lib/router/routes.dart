@@ -19,6 +19,7 @@ import 'package:songquest/screens/playlist/my_playlist_screen.dart';
 import 'package:songquest/screens/playlist/add_song_screen.dart';
 import 'package:songquest/screens/playlist/playlist_items_screen.dart';
 import 'package:songquest/screens/account/account_screen.dart';
+import 'package:songquest/screens/account/reject_reasons_screen.dart';
 import 'package:songquest/screens/home/home_page.dart';
 import 'package:songquest/screens/scaffold_home_page.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
@@ -129,6 +130,11 @@ class Routes {
           path: '/my-playlist',
           name: 'My Playlist',
           pageBuilder: (context, state) => transitionResolver(const MyPlaylistScreen()),
+        ),
+        GoRoute(
+          path: '/reject-reasons',
+          name: 'Reject Reasons',
+          pageBuilder: (context, state) => transitionResolver(const RejectReasonsScreen()),
         ),
         GoRoute(
           path: '/playlist-items',
