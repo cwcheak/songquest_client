@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -81,7 +83,9 @@ class AccountScreen extends StatelessWidget {
                   '',
                   null,
                 ),
-                _buildListItem(context, Icons.logout, 'Logout', '', null),
+                _buildListItem(context, Icons.logout, 'Logout', '', () {
+                  context.read<AuthBloc>().add(AuthSignOutRequested());
+                }),
               ].toList(),
             ),
           ),

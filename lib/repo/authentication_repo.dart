@@ -29,7 +29,10 @@ class AuthenticationRepository {
   }) async {
     try {
       // Create user account
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
       // Send email verification
       await userCredential.user?.sendEmailVerification();
@@ -102,6 +105,20 @@ class AuthenticationRepository {
   Future<void> sendVerificationEmail() async {
     try {
       await _firebaseAuth.currentUser?.sendEmailVerification();
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
+    }
+  }
+
+  /// Get the Firebase ID token for the current user
+  /// This token will be used for API authentication
+  Future<String?> getFirebaseToken() async {
+    try {
+      final user = _firebaseAuth.currentUser;
+      if (user != null) {
+        return await user.getIdToken();
+      }
+      return null;
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     }

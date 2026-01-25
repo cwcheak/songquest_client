@@ -3,9 +3,12 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 // import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:songquest/helper/logger.dart';
+import 'package:songquest/helper/firebase_auth_interceptor.dart';
+import 'package:songquest/repo/authentication_repo.dart';
 
 class HttpClient {
   static final dio = Dio();
+  static FirebaseAuthInterceptor? _authInterceptor;
 
   static final cacheStore = MemCacheStore();
 
@@ -38,17 +41,36 @@ class HttpClient {
     );
   }
 
+  /// Set the authentication repository to enable Firebase token authentication
+  static void setAuthRepository(AuthenticationRepository authRepo) {
+    // Remove existing auth interceptor if any
+    if (_authInterceptor != null) {
+      dio.interceptors.remove(_authInterceptor);
+    }
+
+    // Add new auth interceptor
+    _authInterceptor = FirebaseAuthInterceptor(authRepo: authRepo);
+    dio.interceptors.add(_authInterceptor!);
+
+    Logger.instance.d('Firebase authentication interceptor added to HTTP client');
+  }
+
+  /// Remove the authentication interceptor
+  static void removeAuthInterceptor() {
+    if (_authInterceptor != null) {
+      dio.interceptors.remove(_authInterceptor);
+      _authInterceptor = null;
+      Logger.instance.d('Firebase authentication interceptor removed from HTTP client');
+    }
+  }
+
   static Future<Response> get(
     String url, {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
     Logger.instance.d('API Request: [GET] $url');
-    return await dio.get(
-      url,
-      queryParameters: queryParameters,
-      options: options,
-    );
+    return await dio.get(url, queryParameters: queryParameters, options: options);
   }
 
   static Future<Response> getCached(
@@ -69,9 +91,7 @@ class HttpClient {
         extra: cacheOptions
             .copyWith(
               maxStale: duration,
-              policy: forceRefresh
-                  ? CachePolicy.refreshForceCache
-                  : CachePolicy.forceCache,
+              policy: forceRefresh ? CachePolicy.refreshForceCache : CachePolicy.forceCache,
             )
             .toExtra(),
       ),
@@ -150,12 +170,7 @@ class HttpClient {
     Options? options,
   }) async {
     Logger.instance.d('API Request: [PUT JSON] $url');
-    return await dio.put(
-      url,
-      queryParameters: queryParameters,
-      data: data,
-      options: options,
-    );
+    return await dio.put(url, queryParameters: queryParameters, data: data, options: options);
   }
 
   static Future<Response> delete(

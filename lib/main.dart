@@ -24,6 +24,7 @@ import 'package:songquest/repo/settings_repo.dart';
 import 'package:songquest/repo/api_server.dart';
 import 'package:songquest/repo/authentication_repo.dart';
 import 'package:songquest/router/routes.dart';
+import 'package:songquest/helper/http.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -70,6 +71,9 @@ void main() async {
   final authenticationRepo = AuthenticationRepository();
   final authBloc = AuthBloc(authenticationRepository: authenticationRepo);
 
+  // Initialize HTTP client with Firebase authentication interceptor
+  HttpClient.init();
+  HttpClient.setAuthRepository(authenticationRepo);
   APIServer().init(settingRepo);
   Cache().init(settingRepo, cacheRepo);
   Routes().init(settingRepo, authBloc);
