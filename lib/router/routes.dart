@@ -183,6 +183,11 @@ class Routes {
             return transitionResolver(BandDetailsScreen(bandName: bandName));
           },
         ),
+        GoRoute(
+          path: '/debug',
+          name: 'Debug',
+          pageBuilder: (context, state) => transitionResolver(const DebugScreen()),
+        ),
         // GoRoute(
         //   path: '/create-account',
         //   name: 'CreateAccount',

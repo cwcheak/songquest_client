@@ -36,6 +36,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "User '${event.firebaseUser!.email}' logged in",
         level: SentryLevel.debug,
       );
+      // Set up Firebase auth interceptor when user is authenticated
+      HttpClient.setAuthRepository(authenticationRepository);
       emit(AuthAuthenticated(event.firebaseUser!));
     } else {
       emit(const AuthUnauthenticated());

@@ -71,6 +71,13 @@ class AccountScreen extends StatelessWidget {
             child: _buildCard(
               context,
               [
+                _buildListItem(
+                  context,
+                  Icons.bug_report_outlined,
+                  'Debug',
+                  '',
+                  () => context.push('/debug'),
+                ),
                 _buildListItem(context, Icons.help_outline, 'FAQ', '', null),
                 _buildListItem(context, Icons.phone, 'Contact Us', '', null),
                 _buildListItem(context, Icons.feedback, 'Feedback', '', null),
