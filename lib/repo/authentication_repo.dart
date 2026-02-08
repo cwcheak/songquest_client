@@ -1,6 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-// import 'package:google_sign_in/google_sign_in.dart';
-// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:songquest/helper/http.dart';
+import 'package:songquest/helper/logger.dart';
 
 class AuthenticationRepository {
   AuthenticationRepository({firebase_auth.FirebaseAuth? firebaseAuth})
@@ -26,23 +27,56 @@ class AuthenticationRepository {
   Future<firebase_auth.UserCredential> signUpWithEmailAndPassword({
     required String email,
     required String password,
+    required String fullName,
+    required String phone,
+    required String role,
   }) async {
     try {
+      Logger.instance.d(
+        'email: ${email}, password: ${password}, fullName: ${fullName}, phone: ${phone}, role: $role',
+      );
+
       // Create user account
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
+      // Get Firebase ID token for backend authentication
+      final idToken = await userCredential.user?.getIdToken();
+
+      Logger.instance.d('idToken: $idToken');
+
+      // Create user in backend database
+      await HttpClient.postJSON(
+        'http://localhost:8080/api/users/register',
+        data: {'idToken': idToken, 'name': fullName, 'email': email, 'mobile': phone, 'role': role},
+      );
+
+      Logger.instance.d('User created in backend database');
+
       // Send email verification
       await userCredential.user?.sendEmailVerification();
+
+      Logger.instance.d('Email verification sent');
 
       // Sign out user to prevent automatic login before verification
       await _firebaseAuth.signOut();
 
+      Logger.instance.d('User signed out after registration');
+
       return userCredential;
     } on firebase_auth.FirebaseAuthException catch (e) {
+      Logger.instance.e('Firebase auth error signing up: ${e.toString()}');
       throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
+    } on DioException catch (e) {
+      Logger.instance.e('Backend API error during signup: ${e.toString()}');
+      // Extract error message from backend response if available
+      final errorMessage = e.response?.data?['message'] ?? e.message ?? 'Failed to create account';
+      throw Exception(errorMessage);
+    } catch (e) {
+      Logger.instance.e('Unexpected error during signup: ${e.toString()}');
+      throw Exception('An unexpected error occurred: ${e.toString()}');
     }
   }
 

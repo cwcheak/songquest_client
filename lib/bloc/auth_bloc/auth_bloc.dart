@@ -113,6 +113,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await authenticationRepository.signUpWithEmailAndPassword(
         email: event.email,
         password: event.password,
+        fullName: event.fullName,
+        phone: event.phone,
+        role: event.role,
       );
     } on firebase_auth.FirebaseAuthException catch (e) {
       emit(AuthFailure(e.message ?? 'Email sign up failed'));

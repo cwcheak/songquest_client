@@ -16,7 +16,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late final FormGroup form;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  String? _selectedRole;
 
   @override
   void initState() {
@@ -44,6 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           validators: [Validators.required, Validators.minLength(8)],
         ),
         'confirmPassword': FormControl<String>(value: '', validators: [Validators.required]),
+        'role': FormControl<String>(value: '', validators: [Validators.required]),
       },
       validators: [Validators.mustMatch('password', 'confirmPassword')],
     );
@@ -80,114 +80,129 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedRole = 'Band member';
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: _selectedRole == 'Band member'
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: _selectedRole == 'Band member'
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.outline,
-                                width: _selectedRole == 'Band member' ? 2 : 1,
-                              ),
-                              boxShadow: _selectedRole == 'Band member'
-                                  ? [
-                                      BoxShadow(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.3),
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Band Member',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: _selectedRole == 'Band member'
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).colorScheme.onSurface,
+                  ReactiveFormConsumer(
+                    builder: (context, formGroup, child) {
+                      final selectedRole = formGroup.value['role'] as String?;
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                formGroup.control('role').value = 'ROLE_BAND_MEMBER';
+                              },
+                              child: Container(
+                                height: 80,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: selectedRole == 'ROLE_BAND_MEMBER'
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: selectedRole == 'ROLE_BAND_MEMBER'
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.outline,
+                                    width: selectedRole == 'ROLE_BAND_MEMBER' ? 2 : 1,
+                                  ),
+                                  boxShadow: selectedRole == 'ROLE_BAND_MEMBER'
+                                      ? [
+                                          BoxShadow(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.primary.withOpacity(0.3),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Band Member',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: selectedRole == 'ROLE_BAND_MEMBER'
+                                          ? Theme.of(context).colorScheme.onPrimary
+                                          : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _selectedRole = 'Cafe/Bar/Event manager';
-                            });
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: _selectedRole == 'Cafe/Bar/Event manager'
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.surface,
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: _selectedRole == 'Cafe/Bar/Event manager'
-                                    ? Theme.of(context).colorScheme.primary
-                                    : Theme.of(context).colorScheme.outline,
-                                width: _selectedRole == 'Cafe/Bar/Event manager' ? 2 : 1,
-                              ),
-                              boxShadow: _selectedRole == 'Cafe/Bar/Event manager'
-                                  ? [
-                                      BoxShadow(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary.withOpacity(0.3),
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Cafe/Bar/Event Manager',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: _selectedRole == 'Cafe/Bar/Event manager'
-                                      ? Theme.of(context).colorScheme.onPrimary
-                                      : Theme.of(context).colorScheme.onSurface,
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                formGroup.control('role').value = 'ROLE_EVENT_MANAGER';
+                              },
+                              child: Container(
+                                height: 80,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: selectedRole == 'ROLE_EVENT_MANAGER'
+                                      ? Theme.of(context).colorScheme.primary
+                                      : Theme.of(context).colorScheme.surface,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: selectedRole == 'ROLE_EVENT_MANAGER'
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(context).colorScheme.outline,
+                                    width: selectedRole == 'ROLE_EVENT_MANAGER' ? 2 : 1,
+                                  ),
+                                  boxShadow: selectedRole == 'ROLE_EVENT_MANAGER'
+                                      ? [
+                                          BoxShadow(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.primary.withOpacity(0.3),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Cafe/Bar/Event Manager',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: selectedRole == 'ROLE_EVENT_MANAGER'
+                                          ? Theme.of(context).colorScheme.onPrimary
+                                          : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ],
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 20),
-                  if (_selectedRole == null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16),
-                      child: Text(
-                        'Please select a role',
-                        style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 14),
-                      ),
-                    ),
+                  ReactiveFormConsumer(
+                    builder: (context, formGroup, child) {
+                      final roleControl = formGroup.control('role');
+                      if (roleControl.invalid && roleControl.touched) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Text(
+                            'Please select a role',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                              fontSize: 14,
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
                   const SizedBox(height: 8),
                   // Full Name Field
                   ReactiveTextField<String>(
@@ -305,16 +320,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               backgroundColor: colorScheme.primary,
                               foregroundColor: colorScheme.onPrimary,
                             ),
-                            onPressed:
-                                (form.valid && _selectedRole != null && state is! AuthLoading)
+                            onPressed: (form.valid && state is! AuthLoading)
                                 ? () {
-                                    final formValue = form.value;
-                                    context.read<AuthBloc>().add(
-                                      AuthSignUpWithEmailRequested(
-                                        email: formValue['email'] as String,
-                                        password: formValue['password'] as String,
-                                      ),
-                                    );
+                                    form.control('role').markAsTouched();
+                                    if (form.valid) {
+                                      final formValue = form.value;
+                                      context.read<AuthBloc>().add(
+                                        AuthSignUpWithEmailRequested(
+                                          email: formValue['email'] as String,
+                                          password: formValue['password'] as String,
+                                          fullName: formValue['fullName'] as String,
+                                          phone: formValue['phone'] as String,
+                                          role: formValue['role'] as String,
+                                        ),
+                                      );
+                                    }
                                   }
                                 : null,
                             child: state is AuthLoading

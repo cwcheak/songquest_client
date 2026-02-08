@@ -188,12 +188,6 @@ class Routes {
           name: 'Debug',
           pageBuilder: (context, state) => transitionResolver(const DebugScreen()),
         ),
-        // GoRoute(
-        //   path: '/create-account',
-        //   name: 'CreateAccount',
-        //   pageBuilder: (context, state) =>
-        //       transitionResolver(const AccountCreationScreen()),
-        // ),
         StatefulShellRoute.indexedStack(
           builder: (context, state, shell) => ScaffoldHomePage(navigationShell: shell),
           branches: [

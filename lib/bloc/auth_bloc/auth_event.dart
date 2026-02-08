@@ -17,7 +17,16 @@ class AuthSignInWithEmailRequested extends AuthEvent {
 class AuthSignUpWithEmailRequested extends AuthEvent {
   final String email;
   final String password;
-  AuthSignUpWithEmailRequested({required this.email, required this.password});
+  final String fullName;
+  final String phone;
+  final String role;
+  AuthSignUpWithEmailRequested({
+    required this.email,
+    required this.password,
+    required this.fullName,
+    required this.phone,
+    required this.role,
+  });
 }
 
 class AuthSignInWithGoogleRequested extends AuthEvent {}
