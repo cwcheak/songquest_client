@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:songquest/config/app_config.dart';
 import 'package:songquest/helper/http.dart';
 import 'package:songquest/helper/logger.dart';
 
@@ -31,13 +32,15 @@ class AuthenticationRepository {
     required String phone,
     required String role,
   }) async {
+    firebase_auth.UserCredential? userCredential;
+
     try {
       Logger.instance.d(
         'email: ${email}, password: ${password}, fullName: ${fullName}, phone: ${phone}, role: $role',
       );
 
-      // Create user account
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+      // Create user account in Firebase
+      userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -47,9 +50,12 @@ class AuthenticationRepository {
 
       Logger.instance.d('idToken: $idToken');
 
+      final url = AppConfig.registerUrl;
+      Logger.instance.d('AppConfig.registerUrl: $url');
+
       // Create user in backend database
       await HttpClient.postJSON(
-        'http://localhost:8080/api/users/register',
+        AppConfig.registerUrl,
         data: {'idToken': idToken, 'name': fullName, 'email': email, 'mobile': phone, 'role': role},
       );
 
@@ -70,11 +76,44 @@ class AuthenticationRepository {
       Logger.instance.e('Firebase auth error signing up: ${e.toString()}');
       throw firebase_auth.FirebaseAuthException(code: e.code, message: e.message);
     } on DioException catch (e) {
-      Logger.instance.e('Backend API error during signup: ${e.toString()}');
+      // ROLLBACK: Delete Firebase user if backend fails to maintain consistency
+      if (userCredential?.user != null) {
+        try {
+          Logger.instance.w('Backend failed, rolling back Firebase user creation');
+          await userCredential!.user!.delete();
+          Logger.instance.d('Firebase user deleted successfully during rollback');
+        } catch (deleteError) {
+          Logger.instance.e(
+            'Failed to delete Firebase user during rollback: ${deleteError.toString()}',
+          );
+          // Log the orphan account for manual cleanup
+          Logger.instance.e(
+            'ORPHAN ACCOUNT: Firebase user exists but backend failed. Email: $email, Phone: $phone',
+          );
+        }
+      }
+
       // Extract error message from backend response if available
       final errorMessage = e.response?.data?['message'] ?? e.message ?? 'Failed to create account';
+      Logger.instance.e('Backend API error during signup: $errorMessage');
       throw Exception(errorMessage);
     } catch (e) {
+      // ROLLBACK: Delete Firebase user if any unexpected error occurs
+      if (userCredential?.user != null) {
+        try {
+          Logger.instance.w('Unexpected error, rolling back Firebase user creation');
+          await userCredential!.user!.delete();
+          Logger.instance.d('Firebase user deleted successfully during rollback');
+        } catch (deleteError) {
+          Logger.instance.e(
+            'Failed to delete Firebase user during rollback: ${deleteError.toString()}',
+          );
+          Logger.instance.e(
+            'ORPHAN ACCOUNT: Firebase user exists but signup failed. Email: $email, Phone: $phone',
+          );
+        }
+      }
+
       Logger.instance.e('Unexpected error during signup: ${e.toString()}');
       throw Exception('An unexpected error occurred: ${e.toString()}');
     }

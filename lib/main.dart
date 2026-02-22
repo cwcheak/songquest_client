@@ -10,6 +10,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'package:songquest/app.dart';
+import 'package:songquest/config/app_config.dart';
 // import 'package:songquest/helper/ability.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
 import 'package:songquest/helper/logger.dart';
@@ -28,6 +29,10 @@ import 'package:songquest/helper/http.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize environment config from .env file
+  await AppConfig.init();
+
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Set app to only work in portrait mode

@@ -60,8 +60,9 @@ class Routes {
         // Check authentication state using AuthBloc
         final authState = context.read<AuthBloc>().state;
 
-        // If still checking auth state, stay on current route
-        if (authState is AuthChecking) {
+        // If still checking auth state or loading, stay on current route
+        // This prevents redirect during login/register flows
+        if (authState is AuthChecking || authState is AuthLoading) {
           return null;
         }
 
@@ -73,6 +74,13 @@ class Routes {
 
         Logger.instance.d('Redirecting to ${state.uri.path}');
 
+        // When on register route, do NOT redirect regardless of auth state
+        // This prevents unwanted redirects during signup when Firebase user is briefly created
+        if (isRegisterRoute) {
+          Logger.instance.d('On register route, not redirecting');
+          return null;
+        }
+
         // Handle initial route determination
         if (state.matchedLocation == '/') {
           return isAuthenticated ? '/home' : '/login';
@@ -83,12 +91,12 @@ class Routes {
           return null;
         }
 
-        // Redirect to login if not authenticated and not on login or register route
-        if (!isAuthenticated && !isLoginRoute) {
+        // Redirect to login if not authenticated and not on login, register, or confirmation route
+        if (!isAuthenticated && !isLoginRoute && !isRegisterRoute && !isConfirmationRoute) {
           return '/login';
         }
 
-        // Redirect to home if authenticated and on login route
+        // Redirect to home if authenticated and on login route (but NOT on register)
         if (isAuthenticated && isLoginRoute) {
           return '/home';
         }

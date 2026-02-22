@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:songquest/bloc/auth_bloc/auth_bloc.dart';
+import 'package:songquest/helper/logger.dart';
 import 'package:songquest/helper/snackbar.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late final FormGroup form;
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
+  bool _hasSignupError = false;
 
   @override
   void initState() {
@@ -301,13 +303,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     builder: (context, form, child) {
                       return BlocConsumer<AuthBloc, AuthState>(
                         listener: (context, state) {
+                          Logger.instance.d(
+                            'RegisterScreen BlocConsumer: Auth state changed: $state',
+                          );
                           if (state is AuthFailure) {
+                            _hasSignupError = true;
                             showAppSnackBar(context, state.message, isError: true);
-                          } else if (state is AuthUnauthenticated) {
+                          } else if (state is AuthUnauthenticated && !_hasSignupError) {
                             context.go(
                               '/confirmation',
                               extra: {'email': form.value['email'] as String},
                             );
+                          } else if (state is AuthAuthenticated) {
+                            // Reset error flag on successful auth
+                            _hasSignupError = false;
                           }
                         },
                         builder: (context, state) {

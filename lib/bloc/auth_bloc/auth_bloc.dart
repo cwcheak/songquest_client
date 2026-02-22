@@ -118,8 +118,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         role: event.role,
       );
     } on firebase_auth.FirebaseAuthException catch (e) {
-      emit(AuthFailure(e.message ?? 'Email sign up failed'));
+      Logger.instance.d('_onSignUpWithEmailRequested firebase error: ${e.message}');
+      emit(AuthFailure(e.message ?? 'Sign up failed'));
     } catch (e) {
+      Logger.instance.d('_onSignUpWithEmailRequested error: ${e.toString()}');
       emit(AuthFailure(e.toString()));
     }
   }
